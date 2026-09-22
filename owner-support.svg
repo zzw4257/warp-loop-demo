@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="390" viewBox="0 0 1100 390">
+ <title>Ordering must survive every choice in which both endpoints exist</title>
+ <desc>Abstract path rule, not a recovered native event path. A path through common events uses only endpoint owners A and B. A path through optional wait C cannot prove the pair ordered when C is skipped.</desc>
+ <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10" fill="#607580"/></marker></defs>
+ <rect width="1100" height="390" fill="white"/>
+ <g font-family="Helvetica,Arial,sans-serif" fill="#192d3b">
+  <text x="26" y="34" font-size="23" font-weight="600">The pair exists whenever A and B execute.</text>
+  <text x="26" y="61" font-size="16" fill="#607580">Its proof must still work if every other optional region is skipped.</text>
+  <text x="26" y="119" font-size="18" fill="#297653">Sufficient</text>
+  <rect x="185" y="90" width="165" height="62" rx="4" fill="#edf4fa" stroke="#1667b1"/>
+  <text x="267" y="116" text-anchor="middle" font-size="18">Access a</text><text x="267" y="140" text-anchor="middle" font-size="15">owner A</text>
+  <rect x="430" y="90" width="195" height="62" rx="4" fill="#f6f8f9" stroke="#607580"/>
+  <text x="527" y="126" text-anchor="middle" font-size="18">Common events</text>
+  <rect x="705" y="90" width="165" height="62" rx="4" fill="#edf4fa" stroke="#1667b1"/>
+  <text x="787" y="116" text-anchor="middle" font-size="18">Access b</text><text x="787" y="140" text-anchor="middle" font-size="15">owner B</text>
+  <path d="M350 121 H425" stroke="#607580" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M625 121 H700" stroke="#607580" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="898" y="115" font-size="16">Required owners:</text><text x="898" y="142" font-size="18">{A, B}</text>
+  <text x="185" y="182" font-size="16" fill="#297653">This path remains when A and B execute, regardless of C.</text>
+  <path d="M26 207 H1074" stroke="#dce3e7"/>
+  <text x="26" y="261" font-size="18" fill="#a06b17">Not sufficient</text>
+  <rect x="185" y="232" width="165" height="62" rx="4" fill="#edf4fa" stroke="#1667b1"/>
+  <text x="267" y="258" text-anchor="middle" font-size="18">Access a</text><text x="267" y="282" text-anchor="middle" font-size="15">owner A</text>
+  <rect x="430" y="232" width="195" height="62" rx="4" fill="#fbf5e8" stroke="#a06b17" stroke-dasharray="6 4"/>
+  <text x="527" y="258" text-anchor="middle" font-size="18">Optional wait</text><text x="527" y="282" text-anchor="middle" font-size="15">owner C</text>
+  <rect x="705" y="232" width="165" height="62" rx="4" fill="#edf4fa" stroke="#1667b1"/>
+  <text x="787" y="258" text-anchor="middle" font-size="18">Access b</text><text x="787" y="282" text-anchor="middle" font-size="15">owner B</text>
+  <path d="M350 263 H425" stroke="#607580" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+  <path d="M625 263 H700" stroke="#607580" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+  <text x="898" y="257" font-size="16">Required owners:</text><text x="898" y="284" font-size="18">{A, B, C}</text>
+  <text x="185" y="324" font-size="16" fill="#a06b17">Skip C: this path disappears. Another valid path is needed.</text>
+  <text x="26" y="371" font-size="14" fill="#607580">Schematic of the sufficient rule. A missing accepted path means unproved, not a demonstrated race.</text>
+ </g>
+</svg>

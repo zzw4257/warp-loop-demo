@@ -1,0 +1,648 @@
+{
+  "admission": {
+    "accepted_region_owners": [
+      {
+        "branch_visit": 0,
+        "cta": [
+          0,
+          0,
+          0
+        ],
+        "warp_id": 8
+      },
+      {
+        "branch_visit": 0,
+        "cta": [
+          0,
+          0,
+          0
+        ],
+        "warp_id": 9
+      },
+      {
+        "branch_visit": 0,
+        "cta": [
+          0,
+          0,
+          0
+        ],
+        "warp_id": 10
+      },
+      {
+        "branch_visit": 0,
+        "cta": [
+          0,
+          0,
+          0
+        ],
+        "warp_id": 11
+      }
+    ],
+    "admitted": true,
+    "binary": {
+      "path": "/Users/zzw4257/wasp-upstream-review-20260920/build/cmake/spverify-ptx",
+      "sha256": "d034912eef58888fae642cf32b7e19b7e3f8e65dd3aea3dc3569693c29a61741"
+    },
+    "body_template": null,
+    "checked_premises": {
+      "all_four_full_warp_choices_audited": true,
+      "explicit_store_queue_empty_on_all_cfg_entries": true,
+      "finite_common_projection": {
+        "added_common_orders": 0,
+        "added_optional_await_requirements": 0,
+        "added_optional_orders": 67584,
+        "added_orders": 67584,
+        "common_operations": 83797,
+        "common_payload_mismatches": 0,
+        "explicit_edges_checked": 83285,
+        "optional_operations": 20672,
+        "required_orders_preserved": 102400,
+        "subdivided_edges": 128,
+        "unmatched_edges": 0
+      },
+      "immutable_address_prefix": {
+        "address_expressions": {
+          "%r2296": {
+            "mask": 6291456,
+            "or": 368,
+            "shift": 16
+          },
+          "%r2297": {
+            "mask": 6291456,
+            "or": 352,
+            "shift": 16
+          },
+          "%r2298": {
+            "mask": 6291456,
+            "or": 336,
+            "shift": 16
+          },
+          "%r2299": {
+            "mask": 6291456,
+            "or": 320,
+            "shift": 16
+          },
+          "%r2300": {
+            "mask": 6291456,
+            "or": 304,
+            "shift": 16
+          },
+          "%r2301": {
+            "mask": 6291456,
+            "or": 288,
+            "shift": 16
+          },
+          "%r2302": {
+            "mask": 6291456,
+            "or": 272,
+            "shift": 16
+          },
+          "%r2303": {
+            "mask": 6291456,
+            "or": 256,
+            "shift": 16
+          }
+        },
+        "admitted": true,
+        "end": 3889,
+        "expression": "((tid.x << shift) & mask) | or",
+        "intermediate_upper_bounds": {
+          "%r2293": 511,
+          "%r2294": 33488896,
+          "%r2295": 6291456,
+          "%r2296": 6291824,
+          "%r2297": 6291808,
+          "%r2298": 6291792,
+          "%r2299": 6291776,
+          "%r2300": 6291760,
+          "%r2301": 6291744,
+          "%r2302": 6291728,
+          "%r2303": 6291712
+        },
+        "no_uint32_overflow": true,
+        "premise": "Every admitted participant has tid.x in the supplied closed interval",
+        "start": 3879,
+        "tid_x_max": 511,
+        "tid_x_min": 0
+      },
+      "no_optional_barrier_commit_or_lifetime_action": true,
+      "private_definite_assignment": true,
+      "private_registers": 396,
+      "straight_line_whitelisted_region": true
+    },
+    "complete": true,
+    "corpus_profile": "varlen-h128",
+    "input_semantic_assumptions": {
+      "clc_always_fails": true,
+      "duplicate_tma_store_benign": true,
+      "immediate_visibility": true,
+      "representative_election": true,
+      "warp_tmem_load_completion": false
+    },
+    "inputs": {
+      "candidate": {
+        "path": "/Users/zzw4257/wasp-upstream-review-20260920/build/varlen-projection-v1/candidate.source.json",
+        "sha256": "4df85b864c7c9d13298279764577a69e351e8470810aae71d851385cb1a7f716"
+      },
+      "skip": {
+        "path": "/Users/zzw4257/wasp-upstream-review-20260920/build/varlen-projection-v1/skip.source.json",
+        "sha256": "38fdd879808ab0ffa3ba0d3169714d3d5ddc51a3ecaf0a5612f605d8948d5941"
+      }
+    },
+    "mapping_sha256": "a70d21a98c677110792b2c34fc55722d65f0339cfdae2a75203ced1711f47e37",
+    "mathematical_premise": "Common frontend control, resolved operands and resources are fixed by the declared native-model family; tensor-value feedback is not certified",
+    "memory_family_verdict": "not_checked",
+    "native_regeneration": [
+      {
+        "choice_audit": {
+          "branch_visits": 128,
+          "complete": true,
+          "lane_sequences": 128,
+          "warp_sequences": 4
+        },
+        "peak_rss_mib": 1814.59375,
+        "pipeline_seconds": 1.898467333,
+        "source": "skip",
+        "source_sha256": "38fdd879808ab0ffa3ba0d3169714d3d5ddc51a3ecaf0a5612f605d8948d5941",
+        "status": "extraction_complete"
+      },
+      {
+        "choice_audit": {
+          "branch_visits": 128,
+          "complete": true,
+          "lane_sequences": 128,
+          "warp_sequences": 4
+        },
+        "peak_rss_mib": 2640.421875,
+        "pipeline_seconds": 2.776516917,
+        "source": "candidate",
+        "source_sha256": "4df85b864c7c9d13298279764577a69e351e8470810aae71d851385cb1a7f716",
+        "status": "extraction_complete"
+      }
+    ],
+    "proof_reference": "research/conditional-tmem/README.md#why-a-common-synchronization-proof-can-survive-optional-work",
+    "ptx_sha256": "86d6b81bd5c92cf28b9e64b716ab1d4032d2eb7b55579e1326dbe866abc30633",
+    "public_input": {
+      "path": "/Users/zzw4257/wasp-upstream-review-20260920/build/varlen-projection-v1/input.json",
+      "sha256": "a36c0672014bce8899e2384619823e4171b09c4b07aa548def2a5010263d5324"
+    },
+    "receipts": {
+      "/Users/zzw4257/wasp-upstream-review-20260920/build/varlen-projection-v1/candidate.report.json": "dcf23cf5ff6336e1c2651937523654304dd20e08a2bd814a1d20f7cdb8a37f75",
+      "/Users/zzw4257/wasp-upstream-review-20260920/build/varlen-projection-v1/mapping-reviewed.json": "a70d21a98c677110792b2c34fc55722d65f0339cfdae2a75203ced1711f47e37",
+      "/Users/zzw4257/wasp-upstream-review-20260920/build/varlen-projection-v1/projection-reviewed.json": "0935701852ff168369fd84da25bab38f9a9799a16006b4817a972e50dbc6f719",
+      "/Users/zzw4257/wasp-upstream-review-20260920/build/varlen-projection-v1/skip.report.json": "cb041f8f8d8a8c9ec93745e6a7befb21d24353cfb16620472ebc2b55beba01c8"
+    },
+    "region": {
+      "first": 3879,
+      "last": 4099
+    },
+    "remaining": [
+      "Native supported ordering for all memory/register conflicts and lifecycle obligations",
+      "Family memory and lifecycle supported-order checks",
+      "Memory-mediated control/address noninterference for a tensor-input claim"
+    ],
+    "runtime_source_pins": {
+      "cpp/include/spverify/frontend/ptx/dependency_history.h": "775d3d072e11478cd2d21e57f4d5af0d31df7a56c9fe129c05f0972789ee95da",
+      "cpp/src/frontend/ptx/execution.cpp": "89f66c30e4058f3e97057f0deb45c146da6910773c08520f5abe892723cbe18f",
+      "cpp/src/frontend/ptx/lowering.cpp": "fdb382af2189de915b54a171b66ff491fb160f8a8e1d0d1285efcfea8ce04c4b"
+    },
+    "schema": "wasp.fixed-control-rescale-admission/v1",
+    "scope": "Pinned native lowering, one CTA and declared finite correction visits; common frontend control, resolved operands, resources and native assumptions held fixed",
+    "tensor_input_noninterference": "not_proved",
+    "visits_per_correction_warp": 1
+  },
+  "all_nonexempt_obligations_ordered": true,
+  "complete": true,
+  "coverage": {
+    "accesses": 337161,
+    "execute_required_orders": 169984,
+    "potential_conflicts": 2354144,
+    "required_order_endpoints": 5253120,
+    "skip_required_orders": 102400,
+    "support_groups": 5
+  },
+  "duplicate_tma_warning_count": 0,
+  "elapsed_seconds": 12.255643875,
+  "exempted_unordered_warning_pairs": 0,
+  "graph_counts": {
+    "discarded_execute_common_edges": 1019928,
+    "phase_nodes": 36,
+    "primitive_events": 513491,
+    "supported_edges": 1399645
+  },
+  "groups": [
+    {
+      "candidate_pairs": 204800,
+      "duplicate_tma_warnings": 0,
+      "hb_queries": 672256,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 262656,
+      "support": [
+        0
+      ],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    },
+    {
+      "candidate_pairs": 204800,
+      "duplicate_tma_warnings": 0,
+      "hb_queries": 672256,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 262656,
+      "support": [
+        1
+      ],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    },
+    {
+      "candidate_pairs": 204800,
+      "duplicate_tma_warnings": 0,
+      "hb_queries": 672256,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 262656,
+      "support": [
+        2
+      ],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    },
+    {
+      "candidate_pairs": 204800,
+      "duplicate_tma_warnings": 0,
+      "hb_queries": 672256,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 262656,
+      "support": [
+        3
+      ],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    },
+    {
+      "candidate_pairs": 1534944,
+      "duplicate_tma_warnings": 0,
+      "hb_queries": 7272384,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 4202496,
+      "support": [],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    }
+  ],
+  "inputs": {
+    "execute_sha256": "4df85b864c7c9d13298279764577a69e351e8470810aae71d851385cb1a7f716",
+    "mapping_sha256": "a70d21a98c677110792b2c34fc55722d65f0339cfdae2a75203ced1711f47e37",
+    "skip_sha256": "38fdd879808ab0ffa3ba0d3169714d3d5ddc51a3ecaf0a5612f605d8948d5941"
+  },
+  "native_reports": {
+    "execute": {
+      "assumption_dependent": true,
+      "assumption_effects": {
+        "warp_tmem_load_completion": {
+          "read_completion_joins": 0
+        }
+      },
+      "assumption_reporting": "triggered=null means applicability was not measured or analysis was not reached",
+      "assumptions": [
+        {
+          "category": "unclear assumption",
+          "enabled": false,
+          "id": "A001",
+          "key": "warp_tmem_load_completion",
+          "text": "All lanes' TMEM reads complete before any lane receives its register results.",
+          "triggered": false
+        },
+        {
+          "category": "unclear assumption",
+          "enabled": true,
+          "id": "A002",
+          "key": "duplicate_tma_store_benign",
+          "text": "Matching same-warp duplicate TMA stores are reported as warnings instead of races.",
+          "triggered": false
+        },
+        {
+          "category": "unclear assumption",
+          "enabled": true,
+          "id": "A003",
+          "key": "immediate_visibility",
+          "text": "Memory effects are immediately visible when executed; visibility fences add no ordering constraints. Async completion and synchronization remain modeled.",
+          "triggered": true
+        },
+        {
+          "category": "unclear assumption",
+          "enabled": true,
+          "id": "A004",
+          "key": "representative_election",
+          "text": "Election selects lane zero when participating, otherwise the lowest participating lane.",
+          "triggered": true
+        },
+        {
+          "category": "unclear assumption",
+          "enabled": true,
+          "id": "A005",
+          "key": "clc_always_fails",
+          "text": "Every cluster launch cancellation request fails.",
+          "triggered": false
+        }
+      ],
+      "counts": {
+        "edges": 1392152,
+        "events": 513491,
+        "instructions": 104469,
+        "memory_accesses": 337161,
+        "threads": 512
+      },
+      "frontend_assumptions": {
+        "assertion_failure_forms": [
+          "trap",
+          "__assertfail"
+        ],
+        "assertion_uses": 0,
+        "clc_failure": true,
+        "clc_uses": 0,
+        "election_policy": {
+          "fallback": "lowest_member",
+          "preferred_lane": 0,
+          "strategy": "preferred_member"
+        },
+        "election_uses": 1536,
+        "fixed_election": true,
+        "immediate_visibility": true,
+        "isolated_launch": true,
+        "noalias_unbounded": false,
+        "pointer_contract": {
+          "aliasing": "distinct_objects_noalias",
+          "extent_bytes": "unbounded"
+        },
+        "shape_input_contract": {
+          "kind": "fixed_read_only",
+          "origin": "shape_arrays",
+          "regions": [
+            {
+              "allocation": "cu_seqlens_q",
+              "byte_offset": 0,
+              "bytes": 12,
+              "resource": "input.arg4.0"
+            },
+            {
+              "allocation": "cu_seqlens_k",
+              "byte_offset": 0,
+              "bytes": 12,
+              "resource": "input.arg5.0"
+            }
+          ],
+          "text": "Configured shape bytes retain their supplied values and are not written during the analyzed execution."
+        },
+        "trap_only_equality_assertions_hold": true
+      },
+      "memory_analysis": {
+        "address_candidates": 2354144,
+        "exhaustive": false,
+        "hb_algorithm": "batched-bitset",
+        "hb_batches": 178,
+        "hb_dfs_queries": 0,
+        "hb_edge_visits": 83948897,
+        "hb_filtered_queries": 0,
+        "hb_peak_index_bytes": 57935872,
+        "hb_queries": 2354144,
+        "hb_query_seconds": 0.42919879299999997,
+        "overlap_queries": 0,
+        "strategy": "conflict-first",
+        "unordered_candidates_examined": 0
+      },
+      "mma_operand_ordering": {},
+      "mode": "verify",
+      "race_count": 0,
+      "race_samples_truncated": false,
+      "races": [],
+      "required_orders": 169984,
+      "schema": "spverify.native-result/v1",
+      "search_complete": true,
+      "semantic_assumptions": {
+        "clc_always_fails": true,
+        "duplicate_tma_store_benign": true,
+        "immediate_visibility": true,
+        "representative_election": true,
+        "warp_tmem_load_completion": false
+      },
+      "source_violations": [],
+      "status": "race_free",
+      "unresolved_count": 0,
+      "verification_limitations": [],
+      "warning_count": 0,
+      "warning_samples_truncated": false,
+      "warnings": []
+    },
+    "skip": {
+      "assumption_dependent": true,
+      "assumption_effects": {
+        "warp_tmem_load_completion": {
+          "read_completion_joins": 0
+        }
+      },
+      "assumption_reporting": "triggered=null means applicability was not measured or analysis was not reached",
+      "assumptions": [
+        {
+          "category": "unclear assumption",
+          "enabled": false,
+          "id": "A001",
+          "key": "warp_tmem_load_completion",
+          "text": "All lanes' TMEM reads complete before any lane receives its register results.",
+          "triggered": false
+        },
+        {
+          "category": "unclear assumption",
+          "enabled": true,
+          "id": "A002",
+          "key": "duplicate_tma_store_benign",
+          "text": "Matching same-warp duplicate TMA stores are reported as warnings instead of races.",
+          "triggered": false
+        },
+        {
+          "category": "unclear assumption",
+          "enabled": true,
+          "id": "A003",
+          "key": "immediate_visibility",
+          "text": "Memory effects are immediately visible when executed; visibility fences add no ordering constraints. Async completion and synchronization remain modeled.",
+          "triggered": true
+        },
+        {
+          "category": "unclear assumption",
+          "enabled": true,
+          "id": "A004",
+          "key": "representative_election",
+          "text": "Election selects lane zero when participating, otherwise the lowest participating lane.",
+          "triggered": true
+        },
+        {
+          "category": "unclear assumption",
+          "enabled": true,
+          "id": "A005",
+          "key": "clc_always_fails",
+          "text": "Every cluster launch cancellation request fails.",
+          "triggered": false
+        }
+      ],
+      "counts": {
+        "edges": 1020056,
+        "events": 388179,
+        "instructions": 83797,
+        "memory_accesses": 247049,
+        "threads": 512
+      },
+      "frontend_assumptions": {
+        "assertion_failure_forms": [
+          "trap",
+          "__assertfail"
+        ],
+        "assertion_uses": 0,
+        "clc_failure": true,
+        "clc_uses": 0,
+        "election_policy": {
+          "fallback": "lowest_member",
+          "preferred_lane": 0,
+          "strategy": "preferred_member"
+        },
+        "election_uses": 1536,
+        "fixed_election": true,
+        "immediate_visibility": true,
+        "isolated_launch": true,
+        "noalias_unbounded": false,
+        "pointer_contract": {
+          "aliasing": "distinct_objects_noalias",
+          "extent_bytes": "unbounded"
+        },
+        "shape_input_contract": {
+          "kind": "fixed_read_only",
+          "origin": "shape_arrays",
+          "regions": [
+            {
+              "allocation": "cu_seqlens_q",
+              "byte_offset": 0,
+              "bytes": 12,
+              "resource": "input.arg4.0"
+            },
+            {
+              "allocation": "cu_seqlens_k",
+              "byte_offset": 0,
+              "bytes": 12,
+              "resource": "input.arg5.0"
+            }
+          ],
+          "text": "Configured shape bytes retain their supplied values and are not written during the analyzed execution."
+        },
+        "trap_only_equality_assertions_hold": true
+      },
+      "memory_analysis": {
+        "address_candidates": 1534944,
+        "exhaustive": false,
+        "hb_algorithm": "batched-bitset",
+        "hb_batches": 125,
+        "hb_dfs_queries": 0,
+        "hb_edge_visits": 42136051,
+        "hb_filtered_queries": 0,
+        "hb_peak_index_bytes": 36081664,
+        "hb_queries": 1534944,
+        "hb_query_seconds": 0.20843408300000002,
+        "overlap_queries": 0,
+        "strategy": "conflict-first",
+        "unordered_candidates_examined": 0
+      },
+      "mma_operand_ordering": {},
+      "mode": "verify",
+      "race_count": 0,
+      "race_samples_truncated": false,
+      "races": [],
+      "required_orders": 102400,
+      "schema": "spverify.native-result/v1",
+      "search_complete": true,
+      "semantic_assumptions": {
+        "clc_always_fails": true,
+        "duplicate_tma_store_benign": true,
+        "immediate_visibility": true,
+        "representative_election": true,
+        "warp_tmem_load_completion": false
+      },
+      "source_violations": [],
+      "status": "race_free",
+      "unresolved_count": 0,
+      "verification_limitations": [],
+      "warning_count": 0,
+      "warning_samples_truncated": false,
+      "warnings": []
+    }
+  },
+  "owners": [
+    {
+      "owner": {
+        "branch_visit": 0,
+        "cta": [
+          0,
+          0,
+          0
+        ],
+        "warp_id": 10
+      },
+      "owner_index": 2
+    },
+    {
+      "owner": {
+        "branch_visit": 0,
+        "cta": [
+          0,
+          0,
+          0
+        ],
+        "warp_id": 11
+      },
+      "owner_index": 3
+    },
+    {
+      "owner": {
+        "branch_visit": 0,
+        "cta": [
+          0,
+          0,
+          0
+        ],
+        "warp_id": 8
+      },
+      "owner_index": 0
+    },
+    {
+      "owner": {
+        "branch_visit": 0,
+        "cta": [
+          0,
+          0,
+          0
+        ],
+        "warp_id": 9
+      },
+      "owner_index": 1
+    }
+  ],
+  "peak_rss_bytes": 2288500736,
+  "schema": "wasp.conditional-family-order/v1",
+  "scope": "Fixed frontend control/footprint family under explicit lowering-simulation admission; not tensor-input or hardware safety",
+  "semantic_assumptions": {
+    "clc_always_fails": true,
+    "duplicate_tma_store_benign": true,
+    "immediate_visibility": true,
+    "representative_election": true,
+    "warp_tmem_load_completion": false
+  },
+  "stage_wall_seconds": {
+    "artifact_read_and_admission_binding": 4.677614875,
+    "candidate_collection": 0.409627542,
+    "hb_queries": 1.865140708,
+    "native_preprocessing_and_sync": 5.135676334,
+    "supported_graph": 0.167580416
+  },
+  "status": "conditional_supported_orders",
+  "support_encoding": "Sorted owner-index arrays of size zero, one or two; no bitmask",
+  "topology_carrier": "Synthetic phase vertices use AwaitDone payloads solely inside native reachability; not executable semantics",
+  "unproved_count": 0,
+  "unproved_samples": []
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "wasp.local-viewer-build/v2",
+  "family_sha256": "36de8bad1561c264c516c248a90994e013a1d33b0e72a0add7351631d4f5605a",
+  "historical_source": "/Users/zzw4257/wasp-loop-branch-research/build/loop-branch-delivery",
+  "historical_demo_sha256": "542c24e31cc4bf22791b98cfe59ef0058a7eeefc3a3546f817d2260e46a03a5a",
+  "historical_report_sha256": "c15f0e1c6d842769cd11e1626e102c7f65da5655dfe88a1368d1f52fad21ee34",
+  "cost_import": "build/loop-branch-current/completed-costs-v2.json",
+  "files": {
+    "app.js": "7fc31e8fcb0946e48ef27e358b20b0a09d76e49e54033470c363590908115936",
+    "corpus-evidence.json": "4e6f8fd843d1deba6b760036bb5a90463ab966be2ad26c0716000331dbac50c9",
+    "data.js": "117ec00ed1963a6ba189eb9829955d20df15c2f0a38db3bd93060f8249a43697",
+    "deepgemm__deepgemm_sm100_bf16_gemm_m128_n256_k128__sm_100f.annotated.ptx": "740b82a8ad7671592bb9e794b86d1d1326ded19bfc67ec8d2d79a8fa936feb73",
+    "discussion.pdf": "80a8ea82115d68c1c9afbb467585f852eae8164a2515f89d9a1ed888f58f7ab8",
+    "efficiency.json": "1c0fa23370bd6e328fe26b46cf3c2145aa05d37d53dd920a6f3b38a8b6605318",
+    "empty-exit.svg": "272b6f05314790810c648ed2f00d0b1d019a3eb494f6df042ee2574accccc3e7",
+    "family-h128.json": "9fc8895889e3cb0f5c42ccf30f6f2b533f56d40ba01a4141ce2ef0773656d0fc",
+    "family-h64.json": "36de8bad1561c264c516c248a90994e013a1d33b0e72a0add7351631d4f5605a",
+    "family.json": "36de8bad1561c264c516c248a90994e013a1d33b0e72a0add7351631d4f5605a",
+    "flash_attention__fwd_dense_bf16_h64__sm_100a.annotated.ptx": "52dd3826684cd6c4e77ae05f98c5bc8482903aa9e43081cee5c6e758b1a40577",
+    "flash_attention__fwd_varlen_bf16_h128__sm_100a.annotated.ptx": "1e4024e6cf65a655b339a70a4c2f0485f3682bedeb026e8549d85e03c1f7701e",
+    "index.html": "764c5fecee84cbf69492a4c01d4e44ad243241f70d511a58da2b08eddc9f5ab5",
+    "loop_branch_2_1.annotated.ptx": "b53a15ad1499dd352bab97da3c95599148201429441609b73e1bf862d603d59d",
+    "optional-region.svg": "ac2db8e154d04e937b99ddb3cacb66970b68986047f3678a0ae53413e7fd07e8",
+    "original.ptx": "211cc269be823c5d34527eff04547b2e01366ed8162e92cb7f34fd4b4e0f8f27",
+    "owner-support.svg": "3c72bd4af758377ce327e88221a70f13968b11d5cc9b98e0c968223d0f75cb86",
+    "report.pdf": "c15f0e1c6d842769cd11e1626e102c7f65da5655dfe88a1368d1f52fad21ee34",
+    "reuse.html": "542c24e31cc4bf22791b98cfe59ef0058a7eeefc3a3546f817d2260e46a03a5a",
+    "running-example.json": "864229fa972b58924cbc68256ed1231a9d491f713110a00109f3d15d01058e5f",
+    "style.css": "2a44e48c496335d26318c054cbc0e11e045194d6d89ad118bf0be994a5c89afa",
+    "thunderkittens__thunderkittens_bf16_b200_gemm__sm_100a.annotated.ptx": "3f73747ee59a4a91c3db1e45a589da4a84445c94a38ab260ed645e2a5f407606",
+    "walkthrough.md": "5a098b957c361dbb858bbbbdd3f21eb142f192d9f1da9991c99ac6e78ec3debd"
+  }
+}

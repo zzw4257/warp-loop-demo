@@ -1,0 +1,792 @@
+{
+  "schema": "wasp.family-view/v1",
+  "status": "conditional_supported_orders",
+  "scope": "Fixed frontend control/footprint family under explicit lowering-simulation admission; not tensor-input or hardware safety",
+  "choice_count": "256",
+  "choice_count_meaning": "Admitted independent owner selections; not enumerated schedules",
+  "owners": [
+    {
+      "owner": {
+        "branch_visit": 0,
+        "cta": [
+          0,
+          0,
+          0
+        ],
+        "warp_id": 8
+      },
+      "owner_index": 0
+    },
+    {
+      "owner": {
+        "branch_visit": 1,
+        "cta": [
+          0,
+          0,
+          0
+        ],
+        "warp_id": 8
+      },
+      "owner_index": 1
+    },
+    {
+      "owner": {
+        "branch_visit": 0,
+        "cta": [
+          0,
+          0,
+          0
+        ],
+        "warp_id": 9
+      },
+      "owner_index": 2
+    },
+    {
+      "owner": {
+        "branch_visit": 1,
+        "cta": [
+          0,
+          0,
+          0
+        ],
+        "warp_id": 9
+      },
+      "owner_index": 3
+    },
+    {
+      "owner": {
+        "branch_visit": 0,
+        "cta": [
+          0,
+          0,
+          0
+        ],
+        "warp_id": 10
+      },
+      "owner_index": 4
+    },
+    {
+      "owner": {
+        "branch_visit": 1,
+        "cta": [
+          0,
+          0,
+          0
+        ],
+        "warp_id": 10
+      },
+      "owner_index": 5
+    },
+    {
+      "owner": {
+        "branch_visit": 0,
+        "cta": [
+          0,
+          0,
+          0
+        ],
+        "warp_id": 11
+      },
+      "owner_index": 6
+    },
+    {
+      "owner": {
+        "branch_visit": 1,
+        "cta": [
+          0,
+          0,
+          0
+        ],
+        "warp_id": 11
+      },
+      "owner_index": 7
+    }
+  ],
+  "groups": [
+    {
+      "candidate_pairs": 13312,
+      "duplicate_tma_warnings": 0,
+      "hb_queries": 26624,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 0,
+      "support": [
+        0,
+        1
+      ],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    },
+    {
+      "candidate_pairs": 151552,
+      "duplicate_tma_warnings": 0,
+      "hb_queries": 434432,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 131328,
+      "support": [
+        0
+      ],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    },
+    {
+      "candidate_pairs": 151552,
+      "duplicate_tma_warnings": 0,
+      "hb_queries": 434432,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 131328,
+      "support": [
+        1
+      ],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    },
+    {
+      "candidate_pairs": 13312,
+      "duplicate_tma_warnings": 0,
+      "hb_queries": 26624,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 0,
+      "support": [
+        2,
+        3
+      ],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    },
+    {
+      "candidate_pairs": 151552,
+      "duplicate_tma_warnings": 0,
+      "hb_queries": 434432,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 131328,
+      "support": [
+        2
+      ],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    },
+    {
+      "candidate_pairs": 151552,
+      "duplicate_tma_warnings": 0,
+      "hb_queries": 434432,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 131328,
+      "support": [
+        3
+      ],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    },
+    {
+      "candidate_pairs": 13312,
+      "duplicate_tma_warnings": 0,
+      "hb_queries": 26624,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 0,
+      "support": [
+        4,
+        5
+      ],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    },
+    {
+      "candidate_pairs": 151552,
+      "duplicate_tma_warnings": 0,
+      "hb_queries": 434432,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 131328,
+      "support": [
+        4
+      ],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    },
+    {
+      "candidate_pairs": 151552,
+      "duplicate_tma_warnings": 0,
+      "hb_queries": 434432,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 131328,
+      "support": [
+        5
+      ],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    },
+    {
+      "candidate_pairs": 13312,
+      "duplicate_tma_warnings": 0,
+      "hb_queries": 26624,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 0,
+      "support": [
+        6,
+        7
+      ],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    },
+    {
+      "candidate_pairs": 151552,
+      "duplicate_tma_warnings": 0,
+      "hb_queries": 434432,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 131328,
+      "support": [
+        6
+      ],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    },
+    {
+      "candidate_pairs": 151552,
+      "duplicate_tma_warnings": 0,
+      "hb_queries": 434432,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 131328,
+      "support": [
+        7
+      ],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    },
+    {
+      "candidate_pairs": 2137712,
+      "duplicate_tma_warnings": 341248,
+      "hb_queries": 9527776,
+      "native_reachability": "batched-bitset",
+      "required_endpoints": 5252352,
+      "support": [],
+      "unproved_pairs": 0,
+      "unproved_required_orders": 0
+    }
+  ],
+  "coverage": {
+    "accesses": 417951,
+    "execute_required_orders": 187008,
+    "potential_conflicts": 3403376,
+    "required_order_endpoints": 6302976,
+    "skip_required_orders": 119424,
+    "support_groups": 13
+  },
+  "graph_counts": {
+    "discarded_execute_common_edges": 1334908,
+    "phase_nodes": 49,
+    "primitive_events": 612420,
+    "supported_edges": 1721484
+  },
+  "exempted_unordered_warning_pairs": 341248,
+  "code": [
+    {
+      "line": 3885,
+      "text": "$L__BB0_125:"
+    },
+    {
+      "line": 3886,
+      "text": "\t.pragma \"nounroll\";"
+    },
+    {
+      "line": 3887,
+      "text": "\tbar.sync \t%r270, 64;"
+    },
+    {
+      "line": 3888,
+      "text": "\tld.shared.b32 \t%r287, [%r42+332];"
+    },
+    {
+      "line": 3889,
+      "text": "\tsetp.lt.f32 \t%p274, %r287, 0f3F800000;"
+    },
+    {
+      "line": 3890,
+      "text": "\tvote.sync.ballot.b32 \t%r2231, %p274, -1;"
+    },
+    {
+      "line": 3891,
+      "text": "\tsetp.eq.b32 \t%p275, %r2231, 0;"
+    },
+    {
+      "line": 3892,
+      "text": "\t@%p275 bra \t$L__BB0_127;"
+    },
+    {
+      "line": 3893,
+      "text": "\ttcgen05.ld.sync.aligned.32x32b.x16.b32 {%r2232, %r2233, %r2234, %r2235, %r2236, %r2237, %r2238, %r2239, %r2240, %r2241, %r2242, %r2243, %r2244, %r2245, %r2246, %r2247}, [%r273];"
+    },
+    {
+      "line": 3894,
+      "text": "\tmov.b64 \t%rd799, {%r2246, %r2247};"
+    },
+    {
+      "line": 3895,
+      "text": "\tmov.b64 \t%rd800, {%r2244, %r2245};"
+    },
+    {
+      "line": 3896,
+      "text": "\tmov.b64 \t%rd801, {%r2242, %r2243};"
+    },
+    {
+      "line": 3897,
+      "text": "\tmov.b64 \t%rd802, {%r2240, %r2241};"
+    },
+    {
+      "line": 3898,
+      "text": "\tmov.b64 \t%rd803, {%r2238, %r2239};"
+    },
+    {
+      "line": 3899,
+      "text": "\tmov.b64 \t%rd804, {%r2236, %r2237};"
+    },
+    {
+      "line": 3900,
+      "text": "\tmov.b64 \t%rd805, {%r2234, %r2235};"
+    },
+    {
+      "line": 3901,
+      "text": "\tmov.b64 \t%rd806, {%r2232, %r2233};"
+    },
+    {
+      "line": 3902,
+      "text": "\tmov.b64 \t%rd807, {%r287, %r287};"
+    },
+    {
+      "line": 3903,
+      "text": "\tmul.rn.f32x2 \t%rd808, %rd806, %rd807;"
+    },
+    {
+      "line": 3904,
+      "text": "\tmul.rn.f32x2 \t%rd809, %rd805, %rd807;"
+    },
+    {
+      "line": 3905,
+      "text": "\tmul.rn.f32x2 \t%rd810, %rd804, %rd807;"
+    },
+    {
+      "line": 3906,
+      "text": "\tmul.rn.f32x2 \t%rd811, %rd803, %rd807;"
+    },
+    {
+      "line": 3907,
+      "text": "\tmul.rn.f32x2 \t%rd812, %rd802, %rd807;"
+    },
+    {
+      "line": 3908,
+      "text": "\tmul.rn.f32x2 \t%rd813, %rd801, %rd807;"
+    },
+    {
+      "line": 3909,
+      "text": "\tmul.rn.f32x2 \t%rd814, %rd800, %rd807;"
+    },
+    {
+      "line": 3910,
+      "text": "\tmul.rn.f32x2 \t%rd815, %rd799, %rd807;"
+    },
+    {
+      "line": 3911,
+      "text": "\tmov.b64 \t{%r2248, %r2249}, %rd815;"
+    },
+    {
+      "line": 3912,
+      "text": "\tmov.b64 \t{%r2250, %r2251}, %rd814;"
+    },
+    {
+      "line": 3913,
+      "text": "\tmov.b64 \t{%r2252, %r2253}, %rd813;"
+    },
+    {
+      "line": 3914,
+      "text": "\tmov.b64 \t{%r2254, %r2255}, %rd812;"
+    },
+    {
+      "line": 3915,
+      "text": "\tmov.b64 \t{%r2256, %r2257}, %rd811;"
+    },
+    {
+      "line": 3916,
+      "text": "\tmov.b64 \t{%r2258, %r2259}, %rd810;"
+    },
+    {
+      "line": 3917,
+      "text": "\tmov.b64 \t{%r2260, %r2261}, %rd809;"
+    },
+    {
+      "line": 3918,
+      "text": "\tmov.b64 \t{%r2262, %r2263}, %rd808;"
+    },
+    {
+      "line": 3919,
+      "text": "\ttcgen05.st.sync.aligned.32x32b.x16.b32 [%r273], {%r2262, %r2263, %r2260, %r2261, %r2258, %r2259, %r2256, %r2257, %r2254, %r2255, %r2252, %r2253, %r2250, %r2251, %r2248, %r2249};"
+    },
+    {
+      "line": 3920,
+      "text": "\ttcgen05.ld.sync.aligned.32x32b.x16.b32 {%r2264, %r2265, %r2266, %r2267, %r2268, %r2269, %r2270, %r2271, %r2272, %r2273, %r2274, %r2275, %r2276, %r2277, %r2278, %r2279}, [%r274];"
+    },
+    {
+      "line": 3921,
+      "text": "\tmov.b64 \t%rd816, {%r2278, %r2279};"
+    },
+    {
+      "line": 3922,
+      "text": "\tmov.b64 \t%rd817, {%r2276, %r2277};"
+    },
+    {
+      "line": 3923,
+      "text": "\tmov.b64 \t%rd818, {%r2274, %r2275};"
+    },
+    {
+      "line": 3924,
+      "text": "\tmov.b64 \t%rd819, {%r2272, %r2273};"
+    },
+    {
+      "line": 3925,
+      "text": "\tmov.b64 \t%rd820, {%r2270, %r2271};"
+    },
+    {
+      "line": 3926,
+      "text": "\tmov.b64 \t%rd821, {%r2268, %r2269};"
+    },
+    {
+      "line": 3927,
+      "text": "\tmov.b64 \t%rd822, {%r2266, %r2267};"
+    },
+    {
+      "line": 3928,
+      "text": "\tmov.b64 \t%rd823, {%r2264, %r2265};"
+    },
+    {
+      "line": 3929,
+      "text": "\tmul.rn.f32x2 \t%rd824, %rd823, %rd807;"
+    },
+    {
+      "line": 3930,
+      "text": "\tmul.rn.f32x2 \t%rd825, %rd822, %rd807;"
+    },
+    {
+      "line": 3931,
+      "text": "\tmul.rn.f32x2 \t%rd826, %rd821, %rd807;"
+    },
+    {
+      "line": 3932,
+      "text": "\tmul.rn.f32x2 \t%rd827, %rd820, %rd807;"
+    },
+    {
+      "line": 3933,
+      "text": "\tmul.rn.f32x2 \t%rd828, %rd819, %rd807;"
+    },
+    {
+      "line": 3934,
+      "text": "\tmul.rn.f32x2 \t%rd829, %rd818, %rd807;"
+    },
+    {
+      "line": 3935,
+      "text": "\tmul.rn.f32x2 \t%rd830, %rd817, %rd807;"
+    },
+    {
+      "line": 3936,
+      "text": "\tmul.rn.f32x2 \t%rd831, %rd816, %rd807;"
+    },
+    {
+      "line": 3937,
+      "text": "\tmov.b64 \t{%r2280, %r2281}, %rd831;"
+    },
+    {
+      "line": 3938,
+      "text": "\tmov.b64 \t{%r2282, %r2283}, %rd830;"
+    },
+    {
+      "line": 3939,
+      "text": "\tmov.b64 \t{%r2284, %r2285}, %rd829;"
+    },
+    {
+      "line": 3940,
+      "text": "\tmov.b64 \t{%r2286, %r2287}, %rd828;"
+    },
+    {
+      "line": 3941,
+      "text": "\tmov.b64 \t{%r2288, %r2289}, %rd827;"
+    },
+    {
+      "line": 3942,
+      "text": "\tmov.b64 \t{%r2290, %r2291}, %rd826;"
+    },
+    {
+      "line": 3943,
+      "text": "\tmov.b64 \t{%r2292, %r2293}, %rd825;"
+    },
+    {
+      "line": 3944,
+      "text": "\tmov.b64 \t{%r2294, %r2295}, %rd824;"
+    },
+    {
+      "line": 3945,
+      "text": "\ttcgen05.st.sync.aligned.32x32b.x16.b32 [%r274], {%r2294, %r2295, %r2292, %r2293, %r2290, %r2291, %r2288, %r2289, %r2286, %r2287, %r2284, %r2285, %r2282, %r2283, %r2280, %r2281};"
+    },
+    {
+      "line": 3946,
+      "text": "\ttcgen05.ld.sync.aligned.32x32b.x16.b32 {%r2296, %r2297, %r2298, %r2299, %r2300, %r2301, %r2302, %r2303, %r2304, %r2305, %r2306, %r2307, %r2308, %r2309, %r2310, %r2311}, [%r275];"
+    },
+    {
+      "line": 3947,
+      "text": "\tmov.b64 \t%rd832, {%r2310, %r2311};"
+    },
+    {
+      "line": 3948,
+      "text": "\tmov.b64 \t%rd833, {%r2308, %r2309};"
+    },
+    {
+      "line": 3949,
+      "text": "\tmov.b64 \t%rd834, {%r2306, %r2307};"
+    },
+    {
+      "line": 3950,
+      "text": "\tmov.b64 \t%rd835, {%r2304, %r2305};"
+    },
+    {
+      "line": 3951,
+      "text": "\tmov.b64 \t%rd836, {%r2302, %r2303};"
+    },
+    {
+      "line": 3952,
+      "text": "\tmov.b64 \t%rd837, {%r2300, %r2301};"
+    },
+    {
+      "line": 3953,
+      "text": "\tmov.b64 \t%rd838, {%r2298, %r2299};"
+    },
+    {
+      "line": 3954,
+      "text": "\tmov.b64 \t%rd839, {%r2296, %r2297};"
+    },
+    {
+      "line": 3955,
+      "text": "\tmul.rn.f32x2 \t%rd840, %rd839, %rd807;"
+    },
+    {
+      "line": 3956,
+      "text": "\tmul.rn.f32x2 \t%rd841, %rd838, %rd807;"
+    },
+    {
+      "line": 3957,
+      "text": "\tmul.rn.f32x2 \t%rd842, %rd837, %rd807;"
+    },
+    {
+      "line": 3958,
+      "text": "\tmul.rn.f32x2 \t%rd843, %rd836, %rd807;"
+    },
+    {
+      "line": 3959,
+      "text": "\tmul.rn.f32x2 \t%rd844, %rd835, %rd807;"
+    },
+    {
+      "line": 3960,
+      "text": "\tmul.rn.f32x2 \t%rd845, %rd834, %rd807;"
+    },
+    {
+      "line": 3961,
+      "text": "\tmul.rn.f32x2 \t%rd846, %rd833, %rd807;"
+    },
+    {
+      "line": 3962,
+      "text": "\tmul.rn.f32x2 \t%rd847, %rd832, %rd807;"
+    },
+    {
+      "line": 3963,
+      "text": "\tmov.b64 \t{%r2312, %r2313}, %rd847;"
+    },
+    {
+      "line": 3964,
+      "text": "\tmov.b64 \t{%r2314, %r2315}, %rd846;"
+    },
+    {
+      "line": 3965,
+      "text": "\tmov.b64 \t{%r2316, %r2317}, %rd845;"
+    },
+    {
+      "line": 3966,
+      "text": "\tmov.b64 \t{%r2318, %r2319}, %rd844;"
+    },
+    {
+      "line": 3967,
+      "text": "\tmov.b64 \t{%r2320, %r2321}, %rd843;"
+    },
+    {
+      "line": 3968,
+      "text": "\tmov.b64 \t{%r2322, %r2323}, %rd842;"
+    },
+    {
+      "line": 3969,
+      "text": "\tmov.b64 \t{%r2324, %r2325}, %rd841;"
+    },
+    {
+      "line": 3970,
+      "text": "\tmov.b64 \t{%r2326, %r2327}, %rd840;"
+    },
+    {
+      "line": 3971,
+      "text": "\ttcgen05.st.sync.aligned.32x32b.x16.b32 [%r275], {%r2326, %r2327, %r2324, %r2325, %r2322, %r2323, %r2320, %r2321, %r2318, %r2319, %r2316, %r2317, %r2314, %r2315, %r2312, %r2313};"
+    },
+    {
+      "line": 3972,
+      "text": "\ttcgen05.ld.sync.aligned.32x32b.x16.b32 {%r2328, %r2329, %r2330, %r2331, %r2332, %r2333, %r2334, %r2335, %r2336, %r2337, %r2338, %r2339, %r2340, %r2341, %r2342, %r2343}, [%r276];"
+    },
+    {
+      "line": 3973,
+      "text": "\tmov.b64 \t%rd848, {%r2342, %r2343};"
+    },
+    {
+      "line": 3974,
+      "text": "\tmov.b64 \t%rd849, {%r2340, %r2341};"
+    },
+    {
+      "line": 3975,
+      "text": "\tmov.b64 \t%rd850, {%r2338, %r2339};"
+    },
+    {
+      "line": 3976,
+      "text": "\tmov.b64 \t%rd851, {%r2336, %r2337};"
+    },
+    {
+      "line": 3977,
+      "text": "\tmov.b64 \t%rd852, {%r2334, %r2335};"
+    },
+    {
+      "line": 3978,
+      "text": "\tmov.b64 \t%rd853, {%r2332, %r2333};"
+    },
+    {
+      "line": 3979,
+      "text": "\tmov.b64 \t%rd854, {%r2330, %r2331};"
+    },
+    {
+      "line": 3980,
+      "text": "\tmov.b64 \t%rd855, {%r2328, %r2329};"
+    },
+    {
+      "line": 3981,
+      "text": "\tmul.rn.f32x2 \t%rd856, %rd855, %rd807;"
+    },
+    {
+      "line": 3982,
+      "text": "\tmul.rn.f32x2 \t%rd857, %rd854, %rd807;"
+    },
+    {
+      "line": 3983,
+      "text": "\tmul.rn.f32x2 \t%rd858, %rd853, %rd807;"
+    },
+    {
+      "line": 3984,
+      "text": "\tmul.rn.f32x2 \t%rd859, %rd852, %rd807;"
+    },
+    {
+      "line": 3985,
+      "text": "\tmul.rn.f32x2 \t%rd860, %rd851, %rd807;"
+    },
+    {
+      "line": 3986,
+      "text": "\tmul.rn.f32x2 \t%rd861, %rd850, %rd807;"
+    },
+    {
+      "line": 3987,
+      "text": "\tmul.rn.f32x2 \t%rd862, %rd849, %rd807;"
+    },
+    {
+      "line": 3988,
+      "text": "\tmul.rn.f32x2 \t%rd863, %rd848, %rd807;"
+    },
+    {
+      "line": 3989,
+      "text": "\tmov.b64 \t{%r2344, %r2345}, %rd863;"
+    },
+    {
+      "line": 3990,
+      "text": "\tmov.b64 \t{%r2346, %r2347}, %rd862;"
+    },
+    {
+      "line": 3991,
+      "text": "\tmov.b64 \t{%r2348, %r2349}, %rd861;"
+    },
+    {
+      "line": 3992,
+      "text": "\tmov.b64 \t{%r2350, %r2351}, %rd860;"
+    },
+    {
+      "line": 3993,
+      "text": "\tmov.b64 \t{%r2352, %r2353}, %rd859;"
+    },
+    {
+      "line": 3994,
+      "text": "\tmov.b64 \t{%r2354, %r2355}, %rd858;"
+    },
+    {
+      "line": 3995,
+      "text": "\tmov.b64 \t{%r2356, %r2357}, %rd857;"
+    },
+    {
+      "line": 3996,
+      "text": "\tmov.b64 \t{%r2358, %r2359}, %rd856;"
+    },
+    {
+      "line": 3997,
+      "text": "\ttcgen05.st.sync.aligned.32x32b.x16.b32 [%r276], {%r2358, %r2359, %r2356, %r2357, %r2354, %r2355, %r2352, %r2353, %r2350, %r2351, %r2348, %r2349, %r2346, %r2347, %r2344, %r2345};"
+    },
+    {
+      "line": 3998,
+      "text": "\ttcgen05.wait::st.sync.aligned;"
+    },
+    {
+      "line": 3999,
+      "text": "$L__BB0_127:"
+    },
+    {
+      "line": 4000,
+      "text": "\tmov.b32 \t%r2360, 1;"
+    },
+    {
+      "line": 4001,
+      "text": "\tmbarrier.arrive.shared.b64 %rd864, [%r413], %r2360;"
+    },
+    {
+      "line": 4002,
+      "text": "\tmbarrier.arrive.shared.b64 %rd865, [%r2204], %r2360;"
+    },
+    {
+      "line": 4003,
+      "text": "\tadd.s32 \t%r2563, %r2563, 1;"
+    },
+    {
+      "line": 4004,
+      "text": "\tsetp.ne.b32 \t%p276, %r2563, -1;"
+    },
+    {
+      "line": 4005,
+      "text": "\t@%p276 bra \t$L__BB0_125;"
+    }
+  ],
+  "code_scope": "Original correction region, including its pair wait and loop continuation",
+  "diagnostic": {
+    "receipt_bound_to_result": false,
+    "elapsed_seconds": null,
+    "peak_rss_bytes": null,
+    "label": "Historical receipt lacks a result hash; timing omitted from this view"
+  },
+  "evidence": [
+    {
+      "path": "build/skeleton-projection-two-round-v1/family-order-v2.json",
+      "sha256": "06b9b04d0718da92919b29759139950619073a6e24b5bbcf6f04e6f55e5663b9"
+    },
+    {
+      "path": "build/skeleton-projection-two-round-v1/family-order-v2.receipt.json",
+      "sha256": "b8e16f08359053f740ff548d6f6748f9318845e7e33b3a4268f7c8692c332712"
+    },
+    {
+      "path": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+      "sha256": "211cc269be823c5d34527eff04547b2e01366ed8162e92cb7f34fd4b4e0f8f27"
+    }
+  ],
+  "not_exported": [
+    "No per-choice execution trace",
+    "No reconstructed HB path",
+    "No tensor-value feasibility proof"
+  ]
+}

@@ -1,0 +1,3197 @@
+{
+  "schema": "wasp.corpus-evidence/v1",
+  "cards": [
+    {
+      "id": "h64",
+      "mechanism": "Conditional TMEM rescale",
+      "source": "Attention h64 source projection; four correction warps",
+      "ptx": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx:3892",
+      "input": "build/conditional-tmem/mixed-two-round-v1/input.json",
+      "positive": "256 admitted choice vectors; 3,403,376 potential conflicts; supported-order family complete",
+      "negative": "tensor feedback / arbitrary repeated visits are outside the admission contract",
+      "verdict": "conditional_supported_orders",
+      "scope": "two visits, fixed control and resolved footprint; A002 exemption retained",
+      "remaining": "memory-mediated branch/address noninterference and numerical equivalence"
+    },
+    {
+      "id": "deepgemm",
+      "mechanism": "Cross-output staged pipeline",
+      "source": "DeepGEMM SM100 BF16 GEMM corpus kernel",
+      "ptx": "corpus/deepgemm__deepgemm_sm100_bf16_gemm_m128_n256_k128__sm_100f.ptx",
+      "input": "build/corpus-loop-branch-restricted-cluster-v1/input.json",
+      "positive": "restricted two-CTA result: race_free; stage 0,1 \u2192 2,3 and continuous cursor",
+      "negative": "cursor reset control: synchronization_candidate; full launch reaches 8 GiB",
+      "verdict": "race_free (restricted)",
+      "scope": "restricted two-CTA positive; first 12-stage wrap not tested",
+      "remaining": "full cross-output family and complete launch scale"
+    },
+    {
+      "id": "tk",
+      "mechanism": "Bulk-group source-read completion",
+      "source": "ThunderKittens B200 GEMM epilogue",
+      "ptx": "corpus/thunderkittens__thunderkittens_bf16_b200_gemm__sm_100a.ptx:5690",
+      "input": "build/corpus-completion-tk-v1/baseline.source.json",
+      "positive": "baseline race_free; four slices / two buffers; 479,826 events",
+      "negative": "one-line wait weakening \u2192 race_candidate; two replay orientations",
+      "verdict": "race_free / discriminating negative",
+      "scope": "source-read retirement before overwrite; native event-model replay",
+      "remaining": "destination completion, authenticated compilation source, WGMMA claims"
+    },
+    {
+      "id": "h128",
+      "mechanism": "Conditional TMEM rescale (h128 profile)",
+      "source": "FlashAttention varlen h128 corrected corpus input",
+      "ptx": "corpus/flash_attention__fwd_varlen_bf16_h128__sm_100a.ptx:1198, 3878\u20134099",
+      "input": "build/varlen-projection-v1/input.json",
+      "positive": "16 independent choices; 2,354,144 potential conflicts; complete supported-order check",
+      "negative": "remove store wait at line 4099 \u2192 unsafe_lifecycle; initial branch 1198 rejected before repairs",
+      "verdict": "conditional_supported_orders",
+      "scope": "one visit per warp, 10 TMA / 32 MMA / 512 threads; h128 is a profile of the same mechanism",
+      "remaining": "tensor-input feedback and repeated visits"
+    }
+  ],
+  "raw": {
+    "h64": {
+      "admission": {
+        "accepted_region_owners": [
+          {
+            "branch_visit": 0,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 8
+          },
+          {
+            "branch_visit": 1,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 8
+          },
+          {
+            "branch_visit": 0,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 9
+          },
+          {
+            "branch_visit": 1,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 9
+          },
+          {
+            "branch_visit": 0,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 10
+          },
+          {
+            "branch_visit": 1,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 10
+          },
+          {
+            "branch_visit": 0,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 11
+          },
+          {
+            "branch_visit": 1,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 11
+          }
+        ],
+        "admitted": true,
+        "binary": {
+          "path": "/Users/zzw4257/wasp-upstream-review-20260920/build/cmake/spverify-ptx",
+          "sha256": "9f435ac1ddf7065bbd6d9474d90c7c32495ac582905e0a691c5580c2377abcb0"
+        },
+        "body_template": {
+          "path": "build/skeleton-projection-v1/execute-mapping.json",
+          "sha256": "935769cbbfb4bed6d6cd7ba70b8178db381c2fafb8b25db9da254fe2177a687c"
+        },
+        "checked_premises": {
+          "all_four_full_warp_choices_audited": true,
+          "explicit_store_queue_empty_on_all_cfg_entries": true,
+          "finite_common_projection": {
+            "added_common_orders": 0,
+            "added_optional_await_requirements": 0,
+            "added_optional_orders": 67584,
+            "added_orders": 67584,
+            "common_operations": 91135,
+            "common_payload_mismatches": 0,
+            "explicit_edges_checked": 90623,
+            "optional_operations": 20800,
+            "required_orders_preserved": 119424,
+            "subdivided_edges": 256,
+            "unmatched_edges": 0
+          },
+          "no_optional_barrier_commit_or_lifetime_action": true,
+          "private_definite_assignment": true,
+          "private_registers": 193,
+          "straight_line_whitelisted_region": true
+        },
+        "complete": true,
+        "input_semantic_assumptions": {
+          "clc_always_fails": true,
+          "duplicate_tma_store_benign": true,
+          "immediate_visibility": true,
+          "representative_election": true,
+          "warp_tmem_load_completion": false
+        },
+        "inputs": {
+          "candidate": {
+            "path": "build/skeleton-projection-two-round-v1/execute.source.json",
+            "sha256": "75366220b4ebcb2551741f3b92421a5c4310868fe34d1e6e6f97ec356e4925b9"
+          },
+          "skip": {
+            "path": "build/skeleton-projection-two-round-v1/skip.source.json",
+            "sha256": "2fc0042c74afb74ca958de5aa7b51a8b0e2346e3dc4aca65efb741a260ac7833"
+          }
+        },
+        "mapping_sha256": "ccb47e71082fc71d78249970312da98d06323eed5a88f72467d19f41164100d3",
+        "mathematical_premise": "Common frontend control, resolved operands and resources are fixed by the declared native-model family; tensor-value feedback is not certified",
+        "memory_family_verdict": "not_checked",
+        "native_regeneration": [
+          {
+            "choice_audit": {
+              "branch_visits": 256,
+              "complete": true,
+              "lane_sequences": 128,
+              "warp_sequences": 4
+            },
+            "peak_rss_mib": 2067.671875,
+            "pipeline_seconds": 2.480739958,
+            "source": "skip",
+            "source_sha256": "2fc0042c74afb74ca958de5aa7b51a8b0e2346e3dc4aca65efb741a260ac7833",
+            "status": "extraction_complete"
+          },
+          {
+            "choice_audit": {
+              "branch_visits": 256,
+              "complete": true,
+              "lane_sequences": 128,
+              "warp_sequences": 4
+            },
+            "peak_rss_mib": 2875.546875,
+            "pipeline_seconds": 3.206854625,
+            "source": "candidate",
+            "source_sha256": "75366220b4ebcb2551741f3b92421a5c4310868fe34d1e6e6f97ec356e4925b9",
+            "status": "extraction_complete"
+          }
+        ],
+        "proof_reference": "research/conditional-tmem/README.md#why-a-common-synchronization-proof-can-survive-optional-work",
+        "ptx_sha256": "211cc269be823c5d34527eff04547b2e01366ed8162e92cb7f34fd4b4e0f8f27",
+        "public_input": {
+          "path": "build/conditional-tmem/mixed-two-round-v1/input.json",
+          "sha256": "5c38be3b4c7213b4e8a74b422b065a1eea9174db0eaec19b2b28795ac9708d37"
+        },
+        "receipts": {
+          "build/skeleton-projection-two-round-v1/execute-final.json": "68e327dcbe854fc72d947f73f588312ae298d79955ee0457fff2ed9f644d2a1f",
+          "build/skeleton-projection-two-round-v1/execute-mapping.json": "ccb47e71082fc71d78249970312da98d06323eed5a88f72467d19f41164100d3",
+          "build/skeleton-projection-two-round-v1/execute.report.json": "48b99cf530d6896fd91a3a4643c1db7c642f41658052865c15dc7873a6aa6767",
+          "build/skeleton-projection-two-round-v1/skip.report.json": "27a0703d4dee5551bcecda6752b08c0c38ee3e78fd48bcaf5b0cd5345769cad9"
+        },
+        "remaining": [
+          "Native supported ordering for all memory/register conflicts and lifecycle obligations",
+          "Family memory and lifecycle supported-order checks",
+          "Memory-mediated control/address noninterference for a tensor-input claim"
+        ],
+        "runtime_source_pins": {
+          "cpp/include/spverify/frontend/ptx/dependency_history.h": "775d3d072e11478cd2d21e57f4d5af0d31df7a56c9fe129c05f0972789ee95da",
+          "cpp/src/frontend/ptx/execution.cpp": "89f66c30e4058f3e97057f0deb45c146da6910773c08520f5abe892723cbe18f",
+          "cpp/src/frontend/ptx/lowering.cpp": "fdb382af2189de915b54a171b66ff491fb160f8a8e1d0d1285efcfea8ce04c4b"
+        },
+        "schema": "wasp.fixed-control-rescale-admission/v1",
+        "scope": "Pinned native lowering, one CTA and declared finite correction visits; common frontend control, resolved operands, resources and native assumptions held fixed",
+        "tensor_input_noninterference": "not_proved",
+        "visits_per_correction_warp": 2
+      },
+      "all_nonexempt_obligations_ordered": true,
+      "complete": true,
+      "coverage": {
+        "accesses": 417951,
+        "execute_required_orders": 187008,
+        "potential_conflicts": 3403376,
+        "required_order_endpoints": 6302976,
+        "skip_required_orders": 119424,
+        "support_groups": 13
+      },
+      "duplicate_tma_warning_count": 341248,
+      "elapsed_seconds": 24.429636667,
+      "exempted_unordered_warning_pairs": 341248,
+      "graph_counts": {
+        "discarded_execute_common_edges": 1334908,
+        "phase_nodes": 49,
+        "primitive_events": 612420,
+        "supported_edges": 1721484
+      },
+      "groups": [
+        {
+          "candidate_pairs": 13312,
+          "duplicate_tma_warnings": 0,
+          "hb_queries": 26624,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 0,
+          "support": [
+            0,
+            1
+          ],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        },
+        {
+          "candidate_pairs": 151552,
+          "duplicate_tma_warnings": 0,
+          "hb_queries": 434432,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 131328,
+          "support": [
+            0
+          ],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        },
+        {
+          "candidate_pairs": 151552,
+          "duplicate_tma_warnings": 0,
+          "hb_queries": 434432,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 131328,
+          "support": [
+            1
+          ],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        },
+        {
+          "candidate_pairs": 13312,
+          "duplicate_tma_warnings": 0,
+          "hb_queries": 26624,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 0,
+          "support": [
+            2,
+            3
+          ],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        },
+        {
+          "candidate_pairs": 151552,
+          "duplicate_tma_warnings": 0,
+          "hb_queries": 434432,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 131328,
+          "support": [
+            2
+          ],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        },
+        {
+          "candidate_pairs": 151552,
+          "duplicate_tma_warnings": 0,
+          "hb_queries": 434432,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 131328,
+          "support": [
+            3
+          ],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        },
+        {
+          "candidate_pairs": 13312,
+          "duplicate_tma_warnings": 0,
+          "hb_queries": 26624,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 0,
+          "support": [
+            4,
+            5
+          ],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        },
+        {
+          "candidate_pairs": 151552,
+          "duplicate_tma_warnings": 0,
+          "hb_queries": 434432,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 131328,
+          "support": [
+            4
+          ],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        },
+        {
+          "candidate_pairs": 151552,
+          "duplicate_tma_warnings": 0,
+          "hb_queries": 434432,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 131328,
+          "support": [
+            5
+          ],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        },
+        {
+          "candidate_pairs": 13312,
+          "duplicate_tma_warnings": 0,
+          "hb_queries": 26624,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 0,
+          "support": [
+            6,
+            7
+          ],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        },
+        {
+          "candidate_pairs": 151552,
+          "duplicate_tma_warnings": 0,
+          "hb_queries": 434432,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 131328,
+          "support": [
+            6
+          ],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        },
+        {
+          "candidate_pairs": 151552,
+          "duplicate_tma_warnings": 0,
+          "hb_queries": 434432,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 131328,
+          "support": [
+            7
+          ],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        },
+        {
+          "candidate_pairs": 2137712,
+          "duplicate_tma_warnings": 341248,
+          "hb_queries": 9527776,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 5252352,
+          "support": [],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        }
+      ],
+      "inputs": {
+        "execute_sha256": "75366220b4ebcb2551741f3b92421a5c4310868fe34d1e6e6f97ec356e4925b9",
+        "mapping_sha256": "ccb47e71082fc71d78249970312da98d06323eed5a88f72467d19f41164100d3",
+        "skip_sha256": "2fc0042c74afb74ca958de5aa7b51a8b0e2346e3dc4aca65efb741a260ac7833"
+      },
+      "native_reports": {
+        "execute": {
+          "assumption_dependent": true,
+          "assumption_effects": {
+            "warp_tmem_load_completion": {
+              "read_completion_joins": 0
+            }
+          },
+          "assumption_reporting": "triggered=null means applicability was not measured or analysis was not reached",
+          "assumptions": [
+            {
+              "category": "unclear assumption",
+              "enabled": false,
+              "id": "A001",
+              "key": "warp_tmem_load_completion",
+              "text": "All lanes' TMEM reads complete before any lane receives its register results.",
+              "triggered": false
+            },
+            {
+              "category": "unclear assumption",
+              "enabled": true,
+              "id": "A002",
+              "key": "duplicate_tma_store_benign",
+              "text": "Matching same-warp duplicate TMA stores are reported as warnings instead of races.",
+              "triggered": true
+            },
+            {
+              "category": "unclear assumption",
+              "enabled": true,
+              "id": "A003",
+              "key": "immediate_visibility",
+              "text": "Memory effects are immediately visible when executed; visibility fences add no ordering constraints. Async completion and synchronization remain modeled.",
+              "triggered": true
+            },
+            {
+              "category": "unclear assumption",
+              "enabled": true,
+              "id": "A004",
+              "key": "representative_election",
+              "text": "Election selects lane zero when participating, otherwise the lowest participating lane.",
+              "triggered": true
+            },
+            {
+              "category": "unclear assumption",
+              "enabled": true,
+              "id": "A005",
+              "key": "clc_always_fails",
+              "text": "Every cluster launch cancellation request fails.",
+              "triggered": false
+            }
+          ],
+          "counts": {
+            "edges": 1711612,
+            "events": 612420,
+            "instructions": 111935,
+            "memory_accesses": 417951,
+            "threads": 512
+          },
+          "frontend_assumptions": {
+            "assertion_failure_forms": [
+              "trap",
+              "__assertfail"
+            ],
+            "assertion_uses": 0,
+            "clc_failure": true,
+            "clc_uses": 0,
+            "election_policy": {
+              "fallback": "lowest_member",
+              "preferred_lane": 0,
+              "strategy": "preferred_member"
+            },
+            "election_uses": 1856,
+            "fixed_election": true,
+            "immediate_visibility": true,
+            "isolated_launch": true,
+            "noalias_unbounded": false,
+            "pointer_contract": {
+              "aliasing": "distinct_objects_noalias",
+              "extent_bytes": "unbounded"
+            },
+            "trap_only_equality_assertions_hold": true
+          },
+          "memory_analysis": {
+            "address_candidates": 3403376,
+            "exhaustive": false,
+            "hb_algorithm": "batched-bitset",
+            "hb_batches": 226,
+            "hb_dfs_queries": 0,
+            "hb_edge_visits": 154543528,
+            "hb_filtered_queries": 341248,
+            "hb_peak_index_bytes": 66759552,
+            "hb_queries": 3403376,
+            "hb_query_seconds": 0.7596912949999999,
+            "overlap_queries": 341248,
+            "strategy": "conflict-first",
+            "unordered_candidates_examined": 341248
+          },
+          "mma_operand_ordering": {},
+          "mode": "verify",
+          "race_count": 0,
+          "race_samples_truncated": false,
+          "races": [],
+          "required_orders": 187008,
+          "schema": "spverify.native-result/v1",
+          "search_complete": true,
+          "semantic_assumptions": {
+            "clc_always_fails": true,
+            "duplicate_tma_store_benign": true,
+            "immediate_visibility": true,
+            "representative_election": true,
+            "warp_tmem_load_completion": false
+          },
+          "source_violations": [],
+          "status": "race_free",
+          "unresolved_count": 0,
+          "verification_limitations": [],
+          "warning_count": 341248,
+          "warning_samples_truncated": true,
+          "warnings": [
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 416,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 547942,
+                "instruction": 107889,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 417,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 549374,
+                "instruction": 107911,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 416,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 547942,
+                "instruction": 107889,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 418,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 550806,
+                "instruction": 107933,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 417,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 549374,
+                "instruction": 107911,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 418,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 550806,
+                "instruction": 107933,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 416,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 547942,
+                "instruction": 107889,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 419,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 552238,
+                "instruction": 107955,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 417,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 549374,
+                "instruction": 107911,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 419,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 552238,
+                "instruction": 107955,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 418,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 550806,
+                "instruction": 107933,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 419,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 552238,
+                "instruction": 107955,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 416,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 547942,
+                "instruction": 107889,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 420,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 553670,
+                "instruction": 107977,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 417,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 549374,
+                "instruction": 107911,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 420,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 553670,
+                "instruction": 107977,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 418,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 550806,
+                "instruction": 107933,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 420,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 553670,
+                "instruction": 107977,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 419,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 552238,
+                "instruction": 107955,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 420,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 553670,
+                "instruction": 107977,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 416,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 547942,
+                "instruction": 107889,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 421,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 555102,
+                "instruction": 107999,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 417,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 549374,
+                "instruction": 107911,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 421,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 555102,
+                "instruction": 107999,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 418,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 550806,
+                "instruction": 107933,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 421,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 555102,
+                "instruction": 107999,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 419,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 552238,
+                "instruction": 107955,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 421,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 555102,
+                "instruction": 107999,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 420,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 553670,
+                "instruction": 107977,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 421,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 555102,
+                "instruction": 107999,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 416,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 547942,
+                "instruction": 107889,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 422,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 556534,
+                "instruction": 108021,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            }
+          ]
+        },
+        "skip": {
+          "assumption_dependent": true,
+          "assumption_effects": {
+            "warp_tmem_load_completion": {
+              "read_completion_joins": 0
+            }
+          },
+          "assumption_reporting": "triggered=null means applicability was not measured or analysis was not reached",
+          "assumptions": [
+            {
+              "category": "unclear assumption",
+              "enabled": false,
+              "id": "A001",
+              "key": "warp_tmem_load_completion",
+              "text": "All lanes' TMEM reads complete before any lane receives its register results.",
+              "triggered": false
+            },
+            {
+              "category": "unclear assumption",
+              "enabled": true,
+              "id": "A002",
+              "key": "duplicate_tma_store_benign",
+              "text": "Matching same-warp duplicate TMA stores are reported as warnings instead of races.",
+              "triggered": true
+            },
+            {
+              "category": "unclear assumption",
+              "enabled": true,
+              "id": "A003",
+              "key": "immediate_visibility",
+              "text": "Memory effects are immediately visible when executed; visibility fences add no ordering constraints. Async completion and synchronization remain modeled.",
+              "triggered": true
+            },
+            {
+              "category": "unclear assumption",
+              "enabled": true,
+              "id": "A004",
+              "key": "representative_election",
+              "text": "Election selects lane zero when participating, otherwise the lowest participating lane.",
+              "triggered": true
+            },
+            {
+              "category": "unclear assumption",
+              "enabled": true,
+              "id": "A005",
+              "key": "clc_always_fails",
+              "text": "Every cluster launch cancellation request fails.",
+              "triggered": false
+            }
+          ],
+          "counts": {
+            "edges": 1335164,
+            "events": 486852,
+            "instructions": 91135,
+            "memory_accesses": 327839,
+            "threads": 512
+          },
+          "frontend_assumptions": {
+            "assertion_failure_forms": [
+              "trap",
+              "__assertfail"
+            ],
+            "assertion_uses": 0,
+            "clc_failure": true,
+            "clc_uses": 0,
+            "election_policy": {
+              "fallback": "lowest_member",
+              "preferred_lane": 0,
+              "strategy": "preferred_member"
+            },
+            "election_uses": 1856,
+            "fixed_election": true,
+            "immediate_visibility": true,
+            "isolated_launch": true,
+            "noalias_unbounded": false,
+            "pointer_contract": {
+              "aliasing": "distinct_objects_noalias",
+              "extent_bytes": "unbounded"
+            },
+            "trap_only_equality_assertions_hold": true
+          },
+          "memory_analysis": {
+            "address_candidates": 2137712,
+            "exhaustive": false,
+            "hb_algorithm": "batched-bitset",
+            "hb_batches": 150,
+            "hb_dfs_queries": 0,
+            "hb_edge_visits": 77770993,
+            "hb_filtered_queries": 341248,
+            "hb_peak_index_bytes": 50698752,
+            "hb_queries": 2137712,
+            "hb_query_seconds": 0.42971166800000005,
+            "overlap_queries": 341248,
+            "strategy": "conflict-first",
+            "unordered_candidates_examined": 341248
+          },
+          "mma_operand_ordering": {},
+          "mode": "verify",
+          "race_count": 0,
+          "race_samples_truncated": false,
+          "races": [],
+          "required_orders": 119424,
+          "schema": "spverify.native-result/v1",
+          "search_complete": true,
+          "semantic_assumptions": {
+            "clc_always_fails": true,
+            "duplicate_tma_store_benign": true,
+            "immediate_visibility": true,
+            "representative_election": true,
+            "warp_tmem_load_completion": false
+          },
+          "source_violations": [],
+          "status": "race_free",
+          "unresolved_count": 0,
+          "verification_limitations": [],
+          "warning_count": 341248,
+          "warning_samples_truncated": true,
+          "warnings": [
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 416,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 422502,
+                "instruction": 87153,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 417,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 423934,
+                "instruction": 87175,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 416,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 422502,
+                "instruction": 87153,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 418,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 425366,
+                "instruction": 87197,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 417,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 423934,
+                "instruction": 87175,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 418,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 425366,
+                "instruction": 87197,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 416,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 422502,
+                "instruction": 87153,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 419,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 426798,
+                "instruction": 87219,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 417,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 423934,
+                "instruction": 87175,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 419,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 426798,
+                "instruction": 87219,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 418,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 425366,
+                "instruction": 87197,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 419,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 426798,
+                "instruction": 87219,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 416,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 422502,
+                "instruction": 87153,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 420,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 428230,
+                "instruction": 87241,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 417,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 423934,
+                "instruction": 87175,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 420,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 428230,
+                "instruction": 87241,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 418,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 425366,
+                "instruction": 87197,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 420,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 428230,
+                "instruction": 87241,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 419,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 426798,
+                "instruction": 87219,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 420,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 428230,
+                "instruction": 87241,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 416,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 422502,
+                "instruction": 87153,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 421,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 429662,
+                "instruction": 87263,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 417,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 423934,
+                "instruction": 87175,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 421,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 429662,
+                "instruction": 87263,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 418,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 425366,
+                "instruction": 87197,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 421,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 429662,
+                "instruction": 87263,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 419,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 426798,
+                "instruction": 87219,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 421,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 429662,
+                "instruction": 87263,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 420,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 428230,
+                "instruction": 87241,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 421,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 429662,
+                "instruction": 87263,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            },
+            {
+              "code": "duplicate-tma-store",
+              "first": {
+                "access_index": 0,
+                "actor": 416,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 422502,
+                "instruction": 87153,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              },
+              "message": "Unordered same-warp TMA writes have matching copy footprints and PTX site-visit indices. Value equality is not proven; analysis continues with all accesses retained.",
+              "overlap": "constant byte ranges intersect",
+              "region": {
+                "address_space": "global",
+                "allocation": "O",
+                "bytes": 128,
+                "offset": 0
+              },
+              "second": {
+                "access_index": 0,
+                "actor": 422,
+                "bytes": 128,
+                "effect_index": 1,
+                "endpoint": {
+                  "address": 27677,
+                  "kind": "memory"
+                },
+                "event": 431094,
+                "instruction": 87285,
+                "location": {
+                  "column": 2,
+                  "file": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx",
+                  "line": 283
+                },
+                "mode": "write"
+              }
+            }
+          ]
+        }
+      },
+      "owners": [
+        {
+          "owner": {
+            "branch_visit": 0,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 10
+          },
+          "owner_index": 4
+        },
+        {
+          "owner": {
+            "branch_visit": 0,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 11
+          },
+          "owner_index": 6
+        },
+        {
+          "owner": {
+            "branch_visit": 0,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 8
+          },
+          "owner_index": 0
+        },
+        {
+          "owner": {
+            "branch_visit": 0,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 9
+          },
+          "owner_index": 2
+        },
+        {
+          "owner": {
+            "branch_visit": 1,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 10
+          },
+          "owner_index": 5
+        },
+        {
+          "owner": {
+            "branch_visit": 1,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 11
+          },
+          "owner_index": 7
+        },
+        {
+          "owner": {
+            "branch_visit": 1,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 8
+          },
+          "owner_index": 1
+        },
+        {
+          "owner": {
+            "branch_visit": 1,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 9
+          },
+          "owner_index": 3
+        }
+      ],
+      "peak_rss_bytes": 2500837376,
+      "schema": "wasp.conditional-family-order/v1",
+      "scope": "Fixed frontend control/footprint family under explicit lowering-simulation admission; not tensor-input or hardware safety",
+      "semantic_assumptions": {
+        "clc_always_fails": true,
+        "duplicate_tma_store_benign": true,
+        "immediate_visibility": true,
+        "representative_election": true,
+        "warp_tmem_load_completion": false
+      },
+      "status": "conditional_supported_orders",
+      "support_encoding": "Sorted owner-index arrays of size zero, one or two; no bitmask",
+      "topology_carrier": "Synthetic phase vertices use AwaitDone payloads solely inside native reachability; not executable semantics",
+      "unproved_count": 0,
+      "unproved_samples": []
+    },
+    "h128": {
+      "admission": {
+        "accepted_region_owners": [
+          {
+            "branch_visit": 0,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 8
+          },
+          {
+            "branch_visit": 0,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 9
+          },
+          {
+            "branch_visit": 0,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 10
+          },
+          {
+            "branch_visit": 0,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 11
+          }
+        ],
+        "admitted": true,
+        "binary": {
+          "path": "/Users/zzw4257/wasp-upstream-review-20260920/build/cmake/spverify-ptx",
+          "sha256": "d034912eef58888fae642cf32b7e19b7e3f8e65dd3aea3dc3569693c29a61741"
+        },
+        "body_template": null,
+        "checked_premises": {
+          "all_four_full_warp_choices_audited": true,
+          "explicit_store_queue_empty_on_all_cfg_entries": true,
+          "finite_common_projection": {
+            "added_common_orders": 0,
+            "added_optional_await_requirements": 0,
+            "added_optional_orders": 67584,
+            "added_orders": 67584,
+            "common_operations": 83797,
+            "common_payload_mismatches": 0,
+            "explicit_edges_checked": 83285,
+            "optional_operations": 20672,
+            "required_orders_preserved": 102400,
+            "subdivided_edges": 128,
+            "unmatched_edges": 0
+          },
+          "immutable_address_prefix": {
+            "address_expressions": {
+              "%r2296": {
+                "mask": 6291456,
+                "or": 368,
+                "shift": 16
+              },
+              "%r2297": {
+                "mask": 6291456,
+                "or": 352,
+                "shift": 16
+              },
+              "%r2298": {
+                "mask": 6291456,
+                "or": 336,
+                "shift": 16
+              },
+              "%r2299": {
+                "mask": 6291456,
+                "or": 320,
+                "shift": 16
+              },
+              "%r2300": {
+                "mask": 6291456,
+                "or": 304,
+                "shift": 16
+              },
+              "%r2301": {
+                "mask": 6291456,
+                "or": 288,
+                "shift": 16
+              },
+              "%r2302": {
+                "mask": 6291456,
+                "or": 272,
+                "shift": 16
+              },
+              "%r2303": {
+                "mask": 6291456,
+                "or": 256,
+                "shift": 16
+              }
+            },
+            "admitted": true,
+            "end": 3889,
+            "expression": "((tid.x << shift) & mask) | or",
+            "intermediate_upper_bounds": {
+              "%r2293": 511,
+              "%r2294": 33488896,
+              "%r2295": 6291456,
+              "%r2296": 6291824,
+              "%r2297": 6291808,
+              "%r2298": 6291792,
+              "%r2299": 6291776,
+              "%r2300": 6291760,
+              "%r2301": 6291744,
+              "%r2302": 6291728,
+              "%r2303": 6291712
+            },
+            "no_uint32_overflow": true,
+            "premise": "Every admitted participant has tid.x in the supplied closed interval",
+            "start": 3879,
+            "tid_x_max": 511,
+            "tid_x_min": 0
+          },
+          "no_optional_barrier_commit_or_lifetime_action": true,
+          "private_definite_assignment": true,
+          "private_registers": 396,
+          "straight_line_whitelisted_region": true
+        },
+        "complete": true,
+        "corpus_profile": "varlen-h128",
+        "input_semantic_assumptions": {
+          "clc_always_fails": true,
+          "duplicate_tma_store_benign": true,
+          "immediate_visibility": true,
+          "representative_election": true,
+          "warp_tmem_load_completion": false
+        },
+        "inputs": {
+          "candidate": {
+            "path": "/Users/zzw4257/wasp-upstream-review-20260920/build/varlen-projection-v1/candidate.source.json",
+            "sha256": "4df85b864c7c9d13298279764577a69e351e8470810aae71d851385cb1a7f716"
+          },
+          "skip": {
+            "path": "/Users/zzw4257/wasp-upstream-review-20260920/build/varlen-projection-v1/skip.source.json",
+            "sha256": "38fdd879808ab0ffa3ba0d3169714d3d5ddc51a3ecaf0a5612f605d8948d5941"
+          }
+        },
+        "mapping_sha256": "a70d21a98c677110792b2c34fc55722d65f0339cfdae2a75203ced1711f47e37",
+        "mathematical_premise": "Common frontend control, resolved operands and resources are fixed by the declared native-model family; tensor-value feedback is not certified",
+        "memory_family_verdict": "not_checked",
+        "native_regeneration": [
+          {
+            "choice_audit": {
+              "branch_visits": 128,
+              "complete": true,
+              "lane_sequences": 128,
+              "warp_sequences": 4
+            },
+            "peak_rss_mib": 1814.59375,
+            "pipeline_seconds": 1.898467333,
+            "source": "skip",
+            "source_sha256": "38fdd879808ab0ffa3ba0d3169714d3d5ddc51a3ecaf0a5612f605d8948d5941",
+            "status": "extraction_complete"
+          },
+          {
+            "choice_audit": {
+              "branch_visits": 128,
+              "complete": true,
+              "lane_sequences": 128,
+              "warp_sequences": 4
+            },
+            "peak_rss_mib": 2640.421875,
+            "pipeline_seconds": 2.776516917,
+            "source": "candidate",
+            "source_sha256": "4df85b864c7c9d13298279764577a69e351e8470810aae71d851385cb1a7f716",
+            "status": "extraction_complete"
+          }
+        ],
+        "proof_reference": "research/conditional-tmem/README.md#why-a-common-synchronization-proof-can-survive-optional-work",
+        "ptx_sha256": "86d6b81bd5c92cf28b9e64b716ab1d4032d2eb7b55579e1326dbe866abc30633",
+        "public_input": {
+          "path": "/Users/zzw4257/wasp-upstream-review-20260920/build/varlen-projection-v1/input.json",
+          "sha256": "a36c0672014bce8899e2384619823e4171b09c4b07aa548def2a5010263d5324"
+        },
+        "receipts": {
+          "/Users/zzw4257/wasp-upstream-review-20260920/build/varlen-projection-v1/candidate.report.json": "dcf23cf5ff6336e1c2651937523654304dd20e08a2bd814a1d20f7cdb8a37f75",
+          "/Users/zzw4257/wasp-upstream-review-20260920/build/varlen-projection-v1/mapping-reviewed.json": "a70d21a98c677110792b2c34fc55722d65f0339cfdae2a75203ced1711f47e37",
+          "/Users/zzw4257/wasp-upstream-review-20260920/build/varlen-projection-v1/projection-reviewed.json": "0935701852ff168369fd84da25bab38f9a9799a16006b4817a972e50dbc6f719",
+          "/Users/zzw4257/wasp-upstream-review-20260920/build/varlen-projection-v1/skip.report.json": "cb041f8f8d8a8c9ec93745e6a7befb21d24353cfb16620472ebc2b55beba01c8"
+        },
+        "region": {
+          "first": 3879,
+          "last": 4099
+        },
+        "remaining": [
+          "Native supported ordering for all memory/register conflicts and lifecycle obligations",
+          "Family memory and lifecycle supported-order checks",
+          "Memory-mediated control/address noninterference for a tensor-input claim"
+        ],
+        "runtime_source_pins": {
+          "cpp/include/spverify/frontend/ptx/dependency_history.h": "775d3d072e11478cd2d21e57f4d5af0d31df7a56c9fe129c05f0972789ee95da",
+          "cpp/src/frontend/ptx/execution.cpp": "89f66c30e4058f3e97057f0deb45c146da6910773c08520f5abe892723cbe18f",
+          "cpp/src/frontend/ptx/lowering.cpp": "fdb382af2189de915b54a171b66ff491fb160f8a8e1d0d1285efcfea8ce04c4b"
+        },
+        "schema": "wasp.fixed-control-rescale-admission/v1",
+        "scope": "Pinned native lowering, one CTA and declared finite correction visits; common frontend control, resolved operands, resources and native assumptions held fixed",
+        "tensor_input_noninterference": "not_proved",
+        "visits_per_correction_warp": 1
+      },
+      "all_nonexempt_obligations_ordered": true,
+      "complete": true,
+      "coverage": {
+        "accesses": 337161,
+        "execute_required_orders": 169984,
+        "potential_conflicts": 2354144,
+        "required_order_endpoints": 5253120,
+        "skip_required_orders": 102400,
+        "support_groups": 5
+      },
+      "duplicate_tma_warning_count": 0,
+      "elapsed_seconds": 12.255643875,
+      "exempted_unordered_warning_pairs": 0,
+      "graph_counts": {
+        "discarded_execute_common_edges": 1019928,
+        "phase_nodes": 36,
+        "primitive_events": 513491,
+        "supported_edges": 1399645
+      },
+      "groups": [
+        {
+          "candidate_pairs": 204800,
+          "duplicate_tma_warnings": 0,
+          "hb_queries": 672256,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 262656,
+          "support": [
+            0
+          ],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        },
+        {
+          "candidate_pairs": 204800,
+          "duplicate_tma_warnings": 0,
+          "hb_queries": 672256,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 262656,
+          "support": [
+            1
+          ],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        },
+        {
+          "candidate_pairs": 204800,
+          "duplicate_tma_warnings": 0,
+          "hb_queries": 672256,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 262656,
+          "support": [
+            2
+          ],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        },
+        {
+          "candidate_pairs": 204800,
+          "duplicate_tma_warnings": 0,
+          "hb_queries": 672256,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 262656,
+          "support": [
+            3
+          ],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        },
+        {
+          "candidate_pairs": 1534944,
+          "duplicate_tma_warnings": 0,
+          "hb_queries": 7272384,
+          "native_reachability": "batched-bitset",
+          "required_endpoints": 4202496,
+          "support": [],
+          "unproved_pairs": 0,
+          "unproved_required_orders": 0
+        }
+      ],
+      "inputs": {
+        "execute_sha256": "4df85b864c7c9d13298279764577a69e351e8470810aae71d851385cb1a7f716",
+        "mapping_sha256": "a70d21a98c677110792b2c34fc55722d65f0339cfdae2a75203ced1711f47e37",
+        "skip_sha256": "38fdd879808ab0ffa3ba0d3169714d3d5ddc51a3ecaf0a5612f605d8948d5941"
+      },
+      "native_reports": {
+        "execute": {
+          "assumption_dependent": true,
+          "assumption_effects": {
+            "warp_tmem_load_completion": {
+              "read_completion_joins": 0
+            }
+          },
+          "assumption_reporting": "triggered=null means applicability was not measured or analysis was not reached",
+          "assumptions": [
+            {
+              "category": "unclear assumption",
+              "enabled": false,
+              "id": "A001",
+              "key": "warp_tmem_load_completion",
+              "text": "All lanes' TMEM reads complete before any lane receives its register results.",
+              "triggered": false
+            },
+            {
+              "category": "unclear assumption",
+              "enabled": true,
+              "id": "A002",
+              "key": "duplicate_tma_store_benign",
+              "text": "Matching same-warp duplicate TMA stores are reported as warnings instead of races.",
+              "triggered": false
+            },
+            {
+              "category": "unclear assumption",
+              "enabled": true,
+              "id": "A003",
+              "key": "immediate_visibility",
+              "text": "Memory effects are immediately visible when executed; visibility fences add no ordering constraints. Async completion and synchronization remain modeled.",
+              "triggered": true
+            },
+            {
+              "category": "unclear assumption",
+              "enabled": true,
+              "id": "A004",
+              "key": "representative_election",
+              "text": "Election selects lane zero when participating, otherwise the lowest participating lane.",
+              "triggered": true
+            },
+            {
+              "category": "unclear assumption",
+              "enabled": true,
+              "id": "A005",
+              "key": "clc_always_fails",
+              "text": "Every cluster launch cancellation request fails.",
+              "triggered": false
+            }
+          ],
+          "counts": {
+            "edges": 1392152,
+            "events": 513491,
+            "instructions": 104469,
+            "memory_accesses": 337161,
+            "threads": 512
+          },
+          "frontend_assumptions": {
+            "assertion_failure_forms": [
+              "trap",
+              "__assertfail"
+            ],
+            "assertion_uses": 0,
+            "clc_failure": true,
+            "clc_uses": 0,
+            "election_policy": {
+              "fallback": "lowest_member",
+              "preferred_lane": 0,
+              "strategy": "preferred_member"
+            },
+            "election_uses": 1536,
+            "fixed_election": true,
+            "immediate_visibility": true,
+            "isolated_launch": true,
+            "noalias_unbounded": false,
+            "pointer_contract": {
+              "aliasing": "distinct_objects_noalias",
+              "extent_bytes": "unbounded"
+            },
+            "shape_input_contract": {
+              "kind": "fixed_read_only",
+              "origin": "shape_arrays",
+              "regions": [
+                {
+                  "allocation": "cu_seqlens_q",
+                  "byte_offset": 0,
+                  "bytes": 12,
+                  "resource": "input.arg4.0"
+                },
+                {
+                  "allocation": "cu_seqlens_k",
+                  "byte_offset": 0,
+                  "bytes": 12,
+                  "resource": "input.arg5.0"
+                }
+              ],
+              "text": "Configured shape bytes retain their supplied values and are not written during the analyzed execution."
+            },
+            "trap_only_equality_assertions_hold": true
+          },
+          "memory_analysis": {
+            "address_candidates": 2354144,
+            "exhaustive": false,
+            "hb_algorithm": "batched-bitset",
+            "hb_batches": 178,
+            "hb_dfs_queries": 0,
+            "hb_edge_visits": 83948897,
+            "hb_filtered_queries": 0,
+            "hb_peak_index_bytes": 57935872,
+            "hb_queries": 2354144,
+            "hb_query_seconds": 0.42919879299999997,
+            "overlap_queries": 0,
+            "strategy": "conflict-first",
+            "unordered_candidates_examined": 0
+          },
+          "mma_operand_ordering": {},
+          "mode": "verify",
+          "race_count": 0,
+          "race_samples_truncated": false,
+          "races": [],
+          "required_orders": 169984,
+          "schema": "spverify.native-result/v1",
+          "search_complete": true,
+          "semantic_assumptions": {
+            "clc_always_fails": true,
+            "duplicate_tma_store_benign": true,
+            "immediate_visibility": true,
+            "representative_election": true,
+            "warp_tmem_load_completion": false
+          },
+          "source_violations": [],
+          "status": "race_free",
+          "unresolved_count": 0,
+          "verification_limitations": [],
+          "warning_count": 0,
+          "warning_samples_truncated": false,
+          "warnings": []
+        },
+        "skip": {
+          "assumption_dependent": true,
+          "assumption_effects": {
+            "warp_tmem_load_completion": {
+              "read_completion_joins": 0
+            }
+          },
+          "assumption_reporting": "triggered=null means applicability was not measured or analysis was not reached",
+          "assumptions": [
+            {
+              "category": "unclear assumption",
+              "enabled": false,
+              "id": "A001",
+              "key": "warp_tmem_load_completion",
+              "text": "All lanes' TMEM reads complete before any lane receives its register results.",
+              "triggered": false
+            },
+            {
+              "category": "unclear assumption",
+              "enabled": true,
+              "id": "A002",
+              "key": "duplicate_tma_store_benign",
+              "text": "Matching same-warp duplicate TMA stores are reported as warnings instead of races.",
+              "triggered": false
+            },
+            {
+              "category": "unclear assumption",
+              "enabled": true,
+              "id": "A003",
+              "key": "immediate_visibility",
+              "text": "Memory effects are immediately visible when executed; visibility fences add no ordering constraints. Async completion and synchronization remain modeled.",
+              "triggered": true
+            },
+            {
+              "category": "unclear assumption",
+              "enabled": true,
+              "id": "A004",
+              "key": "representative_election",
+              "text": "Election selects lane zero when participating, otherwise the lowest participating lane.",
+              "triggered": true
+            },
+            {
+              "category": "unclear assumption",
+              "enabled": true,
+              "id": "A005",
+              "key": "clc_always_fails",
+              "text": "Every cluster launch cancellation request fails.",
+              "triggered": false
+            }
+          ],
+          "counts": {
+            "edges": 1020056,
+            "events": 388179,
+            "instructions": 83797,
+            "memory_accesses": 247049,
+            "threads": 512
+          },
+          "frontend_assumptions": {
+            "assertion_failure_forms": [
+              "trap",
+              "__assertfail"
+            ],
+            "assertion_uses": 0,
+            "clc_failure": true,
+            "clc_uses": 0,
+            "election_policy": {
+              "fallback": "lowest_member",
+              "preferred_lane": 0,
+              "strategy": "preferred_member"
+            },
+            "election_uses": 1536,
+            "fixed_election": true,
+            "immediate_visibility": true,
+            "isolated_launch": true,
+            "noalias_unbounded": false,
+            "pointer_contract": {
+              "aliasing": "distinct_objects_noalias",
+              "extent_bytes": "unbounded"
+            },
+            "shape_input_contract": {
+              "kind": "fixed_read_only",
+              "origin": "shape_arrays",
+              "regions": [
+                {
+                  "allocation": "cu_seqlens_q",
+                  "byte_offset": 0,
+                  "bytes": 12,
+                  "resource": "input.arg4.0"
+                },
+                {
+                  "allocation": "cu_seqlens_k",
+                  "byte_offset": 0,
+                  "bytes": 12,
+                  "resource": "input.arg5.0"
+                }
+              ],
+              "text": "Configured shape bytes retain their supplied values and are not written during the analyzed execution."
+            },
+            "trap_only_equality_assertions_hold": true
+          },
+          "memory_analysis": {
+            "address_candidates": 1534944,
+            "exhaustive": false,
+            "hb_algorithm": "batched-bitset",
+            "hb_batches": 125,
+            "hb_dfs_queries": 0,
+            "hb_edge_visits": 42136051,
+            "hb_filtered_queries": 0,
+            "hb_peak_index_bytes": 36081664,
+            "hb_queries": 1534944,
+            "hb_query_seconds": 0.20843408300000002,
+            "overlap_queries": 0,
+            "strategy": "conflict-first",
+            "unordered_candidates_examined": 0
+          },
+          "mma_operand_ordering": {},
+          "mode": "verify",
+          "race_count": 0,
+          "race_samples_truncated": false,
+          "races": [],
+          "required_orders": 102400,
+          "schema": "spverify.native-result/v1",
+          "search_complete": true,
+          "semantic_assumptions": {
+            "clc_always_fails": true,
+            "duplicate_tma_store_benign": true,
+            "immediate_visibility": true,
+            "representative_election": true,
+            "warp_tmem_load_completion": false
+          },
+          "source_violations": [],
+          "status": "race_free",
+          "unresolved_count": 0,
+          "verification_limitations": [],
+          "warning_count": 0,
+          "warning_samples_truncated": false,
+          "warnings": []
+        }
+      },
+      "owners": [
+        {
+          "owner": {
+            "branch_visit": 0,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 10
+          },
+          "owner_index": 2
+        },
+        {
+          "owner": {
+            "branch_visit": 0,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 11
+          },
+          "owner_index": 3
+        },
+        {
+          "owner": {
+            "branch_visit": 0,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 8
+          },
+          "owner_index": 0
+        },
+        {
+          "owner": {
+            "branch_visit": 0,
+            "cta": [
+              0,
+              0,
+              0
+            ],
+            "warp_id": 9
+          },
+          "owner_index": 1
+        }
+      ],
+      "peak_rss_bytes": 2288500736,
+      "schema": "wasp.conditional-family-order/v1",
+      "scope": "Fixed frontend control/footprint family under explicit lowering-simulation admission; not tensor-input or hardware safety",
+      "semantic_assumptions": {
+        "clc_always_fails": true,
+        "duplicate_tma_store_benign": true,
+        "immediate_visibility": true,
+        "representative_election": true,
+        "warp_tmem_load_completion": false
+      },
+      "stage_wall_seconds": {
+        "artifact_read_and_admission_binding": 4.677614875,
+        "candidate_collection": 0.409627542,
+        "hb_queries": 1.865140708,
+        "native_preprocessing_and_sync": 5.135676334,
+        "supported_graph": 0.167580416
+      },
+      "status": "conditional_supported_orders",
+      "support_encoding": "Sorted owner-index arrays of size zero, one or two; no bitmask",
+      "topology_carrier": "Synthetic phase vertices use AwaitDone payloads solely inside native reachability; not executable semantics",
+      "unproved_count": 0,
+      "unproved_samples": []
+    },
+    "tk": {
+      "single_changed_ptx_line": 5690,
+      "baseline": "race_free",
+      "weakened": "race_candidate",
+      "counts": {
+        "edges": 1346778,
+        "events": 479826,
+        "instructions": 93738,
+        "memory_accesses": 315886,
+        "threads": 512
+      },
+      "race": {
+        "first": {
+          "access_index": 0,
+          "actor": 0,
+          "bytes": 128,
+          "effect_index": 0,
+          "endpoint": {
+            "address": 66,
+            "kind": "memory"
+          },
+          "event": 471,
+          "instruction": 101,
+          "location": {
+            "column": 29,
+            "file": "/home/mengdi/spverify/upstream-survey/ThunderKittens/include/ops/thread/memory/tile/tma.cuh",
+            "line": 130
+          },
+          "mode": "read"
+        },
+        "overlap": "constant byte ranges intersect",
+        "region": {
+          "address_space": "shared",
+          "allocation": "cta:(0, 0, 0):shared:physical.shared.cta.0",
+          "bytes": 4,
+          "offset": 164864
+        },
+        "second": {
+          "access_index": 0,
+          "actor": 0,
+          "bytes": 4,
+          "effect_index": 1,
+          "endpoint": {
+            "address": 66,
+            "kind": "memory"
+          },
+          "event": 4010,
+          "instruction": 263,
+          "location": {
+            "column": 26,
+            "file": "/home/mengdi/spverify/upstream-survey/ThunderKittens/include/ops/thread/memory/tile/../../util/util.cuh",
+            "line": 104
+          },
+          "mode": "write"
+        }
+      },
+      "source_paths": {
+        "baseline": {
+          "path": "build/corpus-completion-tk-v1/baseline.source.json",
+          "sha256": "b1cbeb38879c20be589b81c2e4a5a5ce9a681323175780403689090022840152"
+        },
+        "weaken-first-reuse": {
+          "path": "build/corpus-completion-tk-v1/weaken-first-reuse.source.json",
+          "sha256": "96e21ab52649f8729e26051aba4f0287f3038c246fa8183c3f9be558b78d3ca1"
+        }
+      },
+      "waits": {
+        "baseline": [
+          {
+            "id": 81,
+            "origin": {
+              "file": "/Users/zzw4257/wasp-upstream-review-20260920/corpus/thunderkittens__thunderkittens_bf16_b200_gemm__sm_100a.ptx",
+              "instruction_index": 939,
+              "occurrence": 0,
+              "opcode": "cp.async.bulk.wait_group.read"
+            },
+            "op": {
+              "kind": "await",
+              "requirements": []
+            }
+          },
+          {
+            "id": 171,
+            "origin": {
+              "file": "/Users/zzw4257/wasp-upstream-review-20260920/corpus/thunderkittens__thunderkittens_bf16_b200_gemm__sm_100a.ptx",
+              "instruction_index": 995,
+              "occurrence": 0,
+              "opcode": "cp.async.bulk.wait_group.read"
+            },
+            "op": {
+              "kind": "await",
+              "requirements": []
+            }
+          },
+          {
+            "id": 261,
+            "origin": {
+              "file": "/Users/zzw4257/wasp-upstream-review-20260920/corpus/thunderkittens__thunderkittens_bf16_b200_gemm__sm_100a.ptx",
+              "instruction_index": 1052,
+              "occurrence": 0,
+              "opcode": "cp.async.bulk.wait_group.read"
+            },
+            "op": {
+              "kind": "await",
+              "requirements": [
+                {
+                  "effect_index": 0,
+                  "instruction": 101,
+                  "milestone": "reads_complete"
+                }
+              ]
+            }
+          },
+          {
+            "id": 354,
+            "origin": {
+              "file": "/Users/zzw4257/wasp-upstream-review-20260920/corpus/thunderkittens__thunderkittens_bf16_b200_gemm__sm_100a.ptx",
+              "instruction_index": 1126,
+              "occurrence": 0,
+              "opcode": "cp.async.bulk.wait_group.read"
+            },
+            "op": {
+              "kind": "await",
+              "requirements": [
+                {
+                  "effect_index": 0,
+                  "instruction": 191,
+                  "milestone": "reads_complete"
+                }
+              ]
+            }
+          }
+        ],
+        "weaken-first-reuse": [
+          {
+            "id": 81,
+            "origin": {
+              "file": "build/corpus-completion-tk-v1/weaken-first-reuse.ptx",
+              "instruction_index": 939,
+              "occurrence": 0,
+              "opcode": "cp.async.bulk.wait_group.read"
+            },
+            "op": {
+              "kind": "await",
+              "requirements": []
+            }
+          },
+          {
+            "id": 171,
+            "origin": {
+              "file": "build/corpus-completion-tk-v1/weaken-first-reuse.ptx",
+              "instruction_index": 995,
+              "occurrence": 0,
+              "opcode": "cp.async.bulk.wait_group.read"
+            },
+            "op": {
+              "kind": "await",
+              "requirements": []
+            }
+          },
+          {
+            "id": 261,
+            "origin": {
+              "file": "build/corpus-completion-tk-v1/weaken-first-reuse.ptx",
+              "instruction_index": 1052,
+              "occurrence": 0,
+              "opcode": "cp.async.bulk.wait_group.read"
+            },
+            "op": {
+              "kind": "await",
+              "requirements": []
+            }
+          },
+          {
+            "id": 354,
+            "origin": {
+              "file": "build/corpus-completion-tk-v1/weaken-first-reuse.ptx",
+              "instruction_index": 1126,
+              "occurrence": 0,
+              "opcode": "cp.async.bulk.wait_group.read"
+            },
+            "op": {
+              "kind": "await",
+              "requirements": [
+                {
+                  "effect_index": 0,
+                  "instruction": 101,
+                  "milestone": "reads_complete"
+                },
+                {
+                  "effect_index": 0,
+                  "instruction": 191,
+                  "milestone": "reads_complete"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "race_origins": [
+        {
+          "id": 101,
+          "actor": 0,
+          "location": {
+            "column": 29,
+            "file": "/home/mengdi/spverify/upstream-survey/ThunderKittens/include/ops/thread/memory/tile/tma.cuh",
+            "line": 130
+          },
+          "ptx_origin": {
+            "file": "build/corpus-completion-tk-v1/weaken-first-reuse.ptx",
+            "instruction_index": 956,
+            "occurrence": 0,
+            "opcode": "cp.async.bulk.tensor.5d.global.shared::cta.tile.bulk_group.L2::cache_hint"
+          }
+        },
+        {
+          "id": 263,
+          "actor": 0,
+          "location": {
+            "column": 26,
+            "file": "/home/mengdi/spverify/upstream-survey/ThunderKittens/include/ops/thread/memory/tile/../../util/util.cuh",
+            "line": 104
+          },
+          "ptx_origin": {
+            "file": "build/corpus-completion-tk-v1/weaken-first-reuse.ptx",
+            "instruction_index": 1054,
+            "occurrence": 0,
+            "opcode": "stmatrix.sync.aligned.m8n8.x4.shared::cta.b16"
+          }
+        }
+      ],
+      "actors": [
+        {
+          "cta": 0,
+          "id": 0,
+          "lane": 0,
+          "warp": 0
+        }
+      ],
+      "completion_obligation": "The first bulk reader is required before the third slice in the baseline. Weakening only that wait defers the same requirement to the fourth slice, which is too late to protect the third slice's overwrite.",
+      "replay": {
+        "boundary": "Certified DAG linearization and Wasp event-model replay; not PTX operational or hardware replay.",
+        "witnesses": [
+          {
+            "model_replay_succeeded": true,
+            "orientation_preserved": true,
+            "read": 471,
+            "requested_order_preserved": true,
+            "unexecuted_count": 0,
+            "write": 4010,
+            "write_first": false,
+            "checked_executed_edges": 1346778,
+            "certificate_only_endpoint_edges": 8801
+          },
+          {
+            "model_replay_succeeded": true,
+            "orientation_preserved": true,
+            "read": 471,
+            "requested_order_preserved": true,
+            "unexecuted_count": 0,
+            "write": 4010,
+            "write_first": true,
+            "checked_executed_edges": 1346778,
+            "certificate_only_endpoint_edges": 8801
+          }
+        ]
+      }
+    }
+  }
+}

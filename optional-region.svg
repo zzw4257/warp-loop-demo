@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="410" viewBox="0 0 1000 410">
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#35414d"/></marker>
+    <marker id="b" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#21658b"/></marker>
+  </defs>
+  <rect width="1000" height="410" fill="white"/>
+  <g font-family="Arial, sans-serif" fill="#25313c" font-size="19">
+    <text x="45" y="30" font-weight="bold">Correction warp</text>
+    <text x="718" y="30" font-weight="bold">Async TMEM engine</text>
+    <path d="M685 48 V361" stroke="#d7dce0"/>
+    <rect x="187" y="53" width="287" height="46" fill="#f2f5f7" stroke="#8998a5"/>
+    <text x="330" y="82" text-anchor="middle">read scale; warp ballot</text>
+    <path d="M330 99 V121 H530 V171 M530 189 V278 M530 298 V338" fill="none" stroke="#35414d" stroke-width="1.8"/>
+    <path d="M330 121 H170 V153" fill="none" stroke="#35414d" stroke-width="1.8" marker-end="url(#a)"/>
+    <text x="45" y="143" fill="#21658b">execute</text><text x="543" y="143">skip</text>
+    <rect x="48" y="158" width="304" height="76" fill="#f1f7fa" stroke="#6188a0"/>
+    <text x="200" y="187" text-anchor="middle">TMEM load / compute / store</text>
+    <text x="200" y="215" text-anchor="middle" font-size="17">four fragment updates</text>
+    <rect x="715" y="158" width="245" height="43" fill="#f1f7fa" stroke="#6188a0"/>
+    <text x="837" y="186" text-anchor="middle">TMEM read effects</text>
+    <rect x="715" y="221" width="245" height="54" fill="#f1f7fa" stroke="#6188a0"/>
+    <text x="837" y="243" text-anchor="middle" font-size="17">prior stores complete</text>
+    <text x="837" y="264" text-anchor="middle" font-size="16">(issuing thread)</text>
+    <path d="M352 180 H709" fill="none" stroke="#35414d" stroke-width="1.8" stroke-dasharray="8 5" marker-end="url(#a)"/>
+    <path d="M699 180 V243 H709" fill="none" stroke="#35414d" stroke-width="1.8" stroke-dasharray="8 5" marker-end="url(#a)"/>
+    <text x="476" y="169" font-size="17">issue</text>
+    <path d="M200 234 V261" fill="none" stroke="#35414d" stroke-width="1.8" marker-end="url(#a)"/>
+    <rect x="87" y="268" width="226" height="42" fill="#f2f5f7" stroke="#8998a5"/>
+    <text x="200" y="295" text-anchor="middle">wait::st returns</text>
+    <path d="M837 275 V288 H318" fill="none" stroke="#21658b" stroke-width="2.2" stroke-dasharray="2 5" marker-end="url(#b)"/>
+    <path d="M200 310 V338 H330 V351 M530 338 H330" fill="none" stroke="#35414d" stroke-width="1.8"/>
+    <path d="M330 338 V351" stroke="#35414d" stroke-width="1.8" marker-end="url(#a)"/>
+    <rect x="188" y="357" width="284" height="42" fill="#f2f5f7" stroke="#8998a5"/>
+    <text x="330" y="384" text-anchor="middle">arrive A; arrive B</text>
+    <text x="534" y="382" font-size="17">both arms reach this continuation</text>
+  </g>
+</svg>

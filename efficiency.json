@@ -1,0 +1,193 @@
+{
+  "schema": "wasp.efficiency/v1",
+  "same_obligations": "same admitted execute/skip family and lifecycle obligations",
+  "method": "projection + admission + supported ordering",
+  "rows": [
+    {
+      "visits": 1,
+      "enumeration": {
+        "status": "complete",
+        "time": 56.97680574993137,
+        "range": [
+          56.509232665994205,
+          58.64224816602655
+        ],
+        "memory": {
+          "median_gib": 0.813934326171875,
+          "range_gib": [
+            0.8094024658203125,
+            0.820159912109375
+          ]
+        },
+        "stop": "complete"
+      },
+      "family": {
+        "status": "complete",
+        "time": 50.533851541928016,
+        "range": [
+          49.748991750064306,
+          51.43418516602833
+        ],
+        "memory": {
+          "median_gib": 4.06951904296875,
+          "range_gib": [
+            3.521697998046875,
+            4.076019287109375
+          ]
+        },
+        "stop": "complete"
+      },
+      "speedup": 1.127497786363219,
+      "verdict": "identical obligations; complete"
+    },
+    {
+      "visits": 2,
+      "enumeration": {
+        "status": "incomplete",
+        "time": null,
+        "range": null,
+        "memory": null,
+        "stop": "timeout"
+      },
+      "family": {
+        "status": "complete",
+        "time": 103.73288799996953,
+        "range": [
+          103.27823100006208,
+          105.65174641599879
+        ],
+        "memory": {
+          "median_gib": 6.07122802734375,
+          "range_gib": [
+            5.328155517578125,
+            6.094085693359375
+          ]
+        },
+        "stop": "complete"
+      },
+      "speedup": null,
+      "verdict": "incomplete comparison"
+    },
+    {
+      "visits": 3,
+      "enumeration": {
+        "status": "incomplete",
+        "time": null,
+        "range": null,
+        "memory": null,
+        "stop": "not run after N2 timeout"
+      },
+      "family": {
+        "status": "incomplete",
+        "time": null,
+        "range": null,
+        "memory": null,
+        "stop": "timeout"
+      },
+      "speedup": null,
+      "verdict": "incomplete comparison"
+    },
+    {
+      "visits": 8,
+      "enumeration": {
+        "status": "incomplete",
+        "time": null,
+        "range": null,
+        "memory": null,
+        "stop": "not run after N2 timeout"
+      },
+      "family": {
+        "status": "incomplete",
+        "time": null,
+        "range": null,
+        "memory": null,
+        "stop": "not run after N3 timeout"
+      },
+      "speedup": null,
+      "verdict": "incomplete comparison"
+    },
+    {
+      "visits": 16,
+      "enumeration": {
+        "status": "incomplete",
+        "time": null,
+        "range": null,
+        "memory": null,
+        "stop": "not run after N2 timeout"
+      },
+      "family": {
+        "status": "incomplete",
+        "time": null,
+        "range": null,
+        "memory": null,
+        "stop": "not run after N3 timeout"
+      },
+      "speedup": null,
+      "verdict": "incomplete comparison"
+    },
+    {
+      "visits": 32,
+      "enumeration": {
+        "status": "incomplete",
+        "time": null,
+        "range": null,
+        "memory": null,
+        "stop": "not run after N2 timeout"
+      },
+      "family": {
+        "status": "incomplete",
+        "time": null,
+        "range": null,
+        "memory": null,
+        "stop": "not run after N3 timeout"
+      },
+      "speedup": null,
+      "verdict": "incomplete comparison"
+    },
+    {
+      "visits": 64,
+      "enumeration": {
+        "status": "incomplete",
+        "time": null,
+        "range": null,
+        "memory": null,
+        "stop": "not run after N2 timeout"
+      },
+      "family": {
+        "status": "incomplete",
+        "time": null,
+        "range": null,
+        "memory": null,
+        "stop": "not run after N3 timeout"
+      },
+      "speedup": null,
+      "verdict": "incomplete comparison"
+    },
+    {
+      "visits": 112,
+      "enumeration": {
+        "status": "incomplete",
+        "time": null,
+        "range": null,
+        "memory": null,
+        "stop": "not run after N2 timeout"
+      },
+      "family": {
+        "status": "incomplete",
+        "time": null,
+        "range": null,
+        "memory": null,
+        "stop": "not run after N3 timeout"
+      },
+      "speedup": null,
+      "verdict": "incomplete comparison"
+    }
+  ],
+  "notes": [
+    "N1: both complete; family has modest end-to-end advantage but higher memory.",
+    "N2: family completes while enumeration reaches the 120 s limit; no speedup is reported.",
+    "N3: family reaches the limit; larger sizes are stopped by contract.",
+    "partial-address prototype has no demonstrated real-input gain.",
+    "two-output cohort is incomplete and parent telemetry is missing."
+  ]
+}
