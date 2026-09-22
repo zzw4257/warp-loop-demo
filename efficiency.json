@@ -1,5 +1,5 @@
 {
-  "schema": "wasp.efficiency/v1",
+  "schema": "wasp.efficiency/v2",
   "same_obligations": "same admitted execute/skip family and lifecycle obligations",
   "method": "projection + admission + supported ordering",
   "rows": [
@@ -181,6 +181,97 @@
       },
       "speedup": null,
       "verdict": "incomplete comparison"
+    }
+  ],
+  "current_methods": [
+    {
+      "name": "Share checks across a branch family",
+      "status": "implemented",
+      "claim": "Projection + admission + endpoint-supported ordering checks the same finite execute/skip family without rerunning every choice.",
+      "result": "N1: 56.98 s enumeration vs 50.53 s family (1.13x), with 0.81 vs 4.07 GiB peak RSS. N2 family completes; enumeration reaches the limit.",
+      "boundary": "Only N1 has a matched speedup. N3 reaches the limit; arbitrary loop length is not solved."
+    },
+    {
+      "name": "Use guarded conflict-order candidates",
+      "status": "implemented, opt-in",
+      "claim": "When duplicate-store exemptions provably cannot apply, check sparse conflict-order obligations instead of the default larger set.",
+      "result": "Constructed N112 source artifact: 2,216,264 -> 96,128 queries; native analysis 308.23 -> 232.18 ms.",
+      "boundary": "Three real-corpus trials showed fallback or resource limits, not a real-corpus speedup."
+    },
+    {
+      "name": "Batch reachability by source",
+      "status": "already in Wasp",
+      "claim": "The existing bitset backend shares propagation for queries with the same source inside one batch.",
+      "result": "N112 strict probe: 6.53 ms DFS vs 4.00 ms bitset HB time; whole instrumented runtime ranges overlap.",
+      "boundary": "This is an existing backend, not our new contribution or an end-to-end speedup."
+    }
+  ],
+  "historical_methods": [
+    {
+      "id": "3.1",
+      "name": "Exact-epoch local proof domain",
+      "idea": "Prove only one justified generation interval, retaining contributor identity and counters.",
+      "status": "historical finite certificate",
+      "decision": "Keep the invariant; do not build a second Q/P simulator because Wasp already performs generation analysis."
+    },
+    {
+      "id": "3.2",
+      "name": "Strict ranks + bad-prefix cut",
+      "idea": "Represent a finite schedule by ranks and ask whether a bad prefix exists.",
+      "status": "historical SMT prototype",
+      "decision": "Useful as a mathematical encoding, but no native backend or arbitrary-N result exists."
+    },
+    {
+      "id": "3.3",
+      "name": "Shared HB expressions at waits",
+      "idea": "Reuse symbolic reachability expressions across queries that cross the same wait interface.",
+      "status": "historical SMT prototype",
+      "decision": "Coupled to the old rank/matching model; it is not the current bitset implementation."
+    },
+    {
+      "id": "3.4",
+      "name": "Certified generation partition",
+      "idea": "Fix justified generation releases first, reducing symbolic wait-match alternatives.",
+      "status": "partial result",
+      "decision": "Formula construction shrank, but both large solver runs returned unknown. Current family projection is a different rule."
+    },
+    {
+      "id": "3.5",
+      "name": "Observation factorization",
+      "idea": "Group access-pair observations into rectangles while preserving the exact published query set.",
+      "status": "design retained",
+      "decision": "The preservation contract remains useful; guarded conflict-order preserves race existence, not identical query lists."
+    },
+    {
+      "id": "3.6",
+      "name": "Targeted concrete reachability",
+      "idea": "Answer only requested HB pairs and share traversal work instead of rebuilding each pair independently.",
+      "status": "covered by current Wasp",
+      "decision": "Batched bitsets already do the main sharing. Only 55 pairs repeat across batches at N112, so no extra exact-pair cache was added."
+    },
+    {
+      "id": "3.7",
+      "name": "Frontier / decomposition / POR",
+      "idea": "Split repeated work into independent frontiers or quotient equivalent interleavings.",
+      "status": "negative result",
+      "decision": "Shared effects defeat the proposed decomposition; no successful generic POR migration is claimed."
+    },
+    {
+      "id": "3.8",
+      "name": "Exact-epoch finite DAG proof",
+      "idea": "Under explicit finite premises, prove every original obligation on the reduced DAG.",
+      "status": "historical sufficient proof",
+      "decision": "Reuse the proof discipline, not its runtime or a whole-source safety verdict."
+    }
+  ],
+  "sources": [
+    {
+      "label": "Current native efficiency record",
+      "href": "hb-efficiency-current.md"
+    },
+    {
+      "label": "Historical eight-direction record",
+      "href": "hb-efficiency-historical.md"
     }
   ],
   "notes": [

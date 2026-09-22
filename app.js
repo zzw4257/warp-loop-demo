@@ -120,6 +120,14 @@ function renderCorpus() {
 }
 function renderEfficiency() {
   const e = data.efficiency; $("efficiency-intro").textContent = "Enumeration checks every admitted choice separately. The family method shares supported ordering checks.";
+  for (const method of e.current_methods) {
+    const card = el("article", undefined, "method-card current-method");
+    const head = el("div", undefined, "method-head"); head.append(el("h3", method.name), el("span", method.status, "status-tag"));
+    const claim = el("p"); claim.append(el("strong", "Method: "), document.createTextNode(method.claim));
+    const result = el("p", method.result, "method-result");
+    const boundary = el("p"); boundary.append(el("strong", "Boundary: "), document.createTextNode(method.boundary));
+    card.append(head, claim, result, boundary); $("current-methods").append(card);
+  }
   for (const row of e.rows) {
     const time = (a) => a.status === "complete" ? `${a.time.toFixed(2)} s [${a.range.map((n) => n.toFixed(2)).join("–")}]` : "incomplete";
     const rss = (a) => a.memory ? a.memory.median_gib.toFixed(2) : "—";
@@ -127,6 +135,13 @@ function renderEfficiency() {
   }
   const first = e.rows.find((r) => r.visits === 1);
   if (first && first.speedup != null) $("cost-highlight").append(el("strong", `${first.enumeration.time.toFixed(2)} s → ${first.family.time.toFixed(2)} s`), el("p", "One visit per warp. Both methods complete; the family method uses more memory. Larger incomplete runs have no speedup claim."));
+  for (const method of e.historical_methods) {
+    const card = el("article", undefined, "method-card");
+    const head = el("div", undefined, "method-head"); head.append(el("span", `§${method.id}`, "method-id"), el("span", method.status, "status-tag"));
+    const decision = el("p"); decision.append(el("strong", "Current decision: "), document.createTextNode(method.decision));
+    card.append(head, el("h3", method.name), el("p", method.idea), decision); $("historical-methods").append(card);
+  }
+  for (const source of e.sources) $("efficiency-sources").append(link(source.label, source.href, "button"));
   $("efficiency-notes").append(...e.notes.map((n) => el("li", n)), el("li", "Table memory order: enumeration / family; sampled peak RSS median. Time shows median [minimum–maximum] over five measurements."));
 }
 function renderLimits() { for (const text of ["Arbitrary tensor feedback", "Arbitrary loop length", "Full cross-output family", "Exact SM90 WGMMA semantics", "Whole-kernel numerical equivalence", "Hardware execution", "All 28 historical cases"]) $("limits-grid").append(el("p", text)); }

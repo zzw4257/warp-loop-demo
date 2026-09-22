@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loop / Branch 可视化操作与讲解指南</title>
+<style>
+:root{--ink:#142434;--muted:#536576;--line:#dce3e9;--blue:#155bb4;--red:#e23d3d;--green:#16845b;--wash:#f5f8fb}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:15px/1.65 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--blue);text-underline-offset:3px}main{max-width:1180px;margin:auto;padding:32px 28px 64px}h1,h2,h3,p{margin:0}h1{font-size:38px;line-height:1.2}h2{font-size:25px;line-height:1.3;margin-bottom:12px}h3{font-size:17px;margin:14px 0 6px}p+ p{margin-top:8px}.lead{font-size:18px;color:var(--muted);margin-top:12px}.legend{display:flex;gap:22px;margin:22px 0 8px;font-weight:700}.red{color:var(--red)}.green{color:var(--green)}.page{padding:30px 0;border-top:1px solid var(--line)}.page:first-child{border-top:0;padding-top:0}.layout{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(250px,1fr);gap:24px;align-items:start}.shot{width:100%;height:auto;border:1px solid var(--line);border-radius:5px;display:block}.notes{background:var(--wash);padding:18px 20px}.notes ol,.notes ul{margin:8px 0 0;padding-left:22px}.notes li+li{margin-top:8px}.say{border-left:4px solid var(--blue);padding:12px 16px;margin-top:16px;background:#eef4fc}.say strong{display:block;margin-bottom:5px}.route{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}.route div{border-top:3px solid var(--blue);padding:12px 0}.route b{display:block}.route span{color:var(--muted);font-size:13px}.resource-list{columns:2;column-gap:30px}.resource-list li{break-inside:avoid}.small{font-size:13px;color:var(--muted)}code{font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
+@media(max-width:850px){main{padding:22px 14px}.layout{grid-template-columns:1fr}.route{grid-template-columns:1fr}.resource-list{columns:1}h1{font-size:30px}}
+@media print{@page{size:A4 landscape;margin:9mm}body{font-size:11px;line-height:1.45}main{max-width:none;padding:0}.page{height:185mm;page-break-after:always;break-after:page;padding:4mm 0;border:0;overflow:hidden}.page:last-child{page-break-after:auto}.layout{grid-template-columns:minmax(0,2.25fr) minmax(62mm,1fr);gap:6mm}.shot{max-height:145mm;object-fit:contain;object-position:top}.notes{padding:4mm 5mm}.lead{font-size:13px}.legend{margin:4mm 0}.say{padding:3mm 4mm;margin-top:3mm}.route{gap:4mm;margin-top:4mm}a{color:inherit;text-decoration:none}h1{font-size:27px}h2{font-size:19px}h3{font-size:13px}}
+</style>
+</head>
+<body><main>
+<section class="page">
+  <h1>Loop / Branch 可视化操作与讲解指南</h1>
+  <p class="lead">今天只讲一个问题：循环中的某一轮跳过异步工作后，原来的 buffer reuse 顺序还成立吗？</p>
+  <div class="legend"><span class="red">红框：要点击的控件</span><span class="green">绿框：要读取的结论或状态</span></div>
+  <div class="layout">
+    <img class="shot" src="guide-assets/01-start-annotated.png" alt="起始页标注">
+    <div class="notes">
+      <h2>起始页</h2>
+      <ol>
+        <li><span class="red">红框 1</span>：进入三 work-item 的最小例子。</li>
+        <li><span class="red">红框 2</span>：打开指南、研究简报和原始报告。</li>
+        <li><span class="green">绿框</span>：先读贡献边界。Wasp 已能检查一个给定路径；这里新增的是对一组 execute/skip 选择共同检查。</li>
+      </ol>
+      <div class="say"><strong>现场直接说</strong>“我不先从算法名出发。先看一个具体问题：第三个 work item 要重新使用 B0，但某条分支可能删掉原来保证顺序的异步操作。我们要判断，哪些 ordering arguments 在这次 skip 之后仍然成立。”</div>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <h2>1. 合法复用：先建立读者能看懂的基线</h2>
+  <div class="layout">
+    <img class="shot" src="guide-assets/02-legal-annotated.png" alt="合法复用界面标注">
+    <div class="notes">
+      <ol>
+        <li><span class="red">红框</span>：保持 <b>Legal reuse</b>；点击 <b>Next event</b>，或直接点 <b>Jump to B0 reuse</b>。</li>
+        <li><span class="red">右上红框</span>：<b>Original PTX</b> 与 <b>Annotated PTX</b> 分开保存；打开的是完整文件，不是摘录。</li>
+        <li><span class="green">顶部绿框</span>：记录结果为 race-free，输入和输出 work correspondence 都一致。</li>
+        <li><span class="green">左侧绿框</span>：三条泳道只表示记录执行的播放顺序，不额外创造 HB edge。</li>
+        <li><span class="green">右下绿框</span>：q2 写回 B0 时，q0 的 pending read effects 为 0，因此这次 reuse 有完成依据。</li>
+      </ol>
+      <div class="say"><strong>现场直接说</strong>“q0 用 B0，q1 用 B1，跨 output 的 q2 再用 B0。关键不是 buffer 编号轮换，而是旧读者在覆盖前已经完成。”</div>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <h2>2. 单因素反例：只把 release 提前</h2>
+  <div class="layout">
+    <img class="shot" src="guide-assets/03-race-annotated.png" alt="提前释放反例界面标注">
+    <div class="notes">
+      <ol>
+        <li><span class="red">顶部红框</span>：点击 <b>Early release</b>。</li>
+        <li><span class="red">控制区红框</span>：执行选择 <b>Recorded race witness</b>，再跳到 B0 reuse。</li>
+        <li><span class="green">结果绿框</span>：状态变成 <b>Race candidate recorded</b>。</li>
+        <li><span class="green">资源绿框</span>：q2 覆盖 B0 时，q0 仍有 1 个 read effect pending；页面直接显示 <b>Overwrite while old reads are pending</b>。</li>
+      </ol>
+      <p class="small">这不是 mock 动画。事件顺序和 witness 取自保存的 verifier 产物；没有记录 trace 的 corpus 案例不会被伪装成可播放动画。</p>
+      <div class="say"><strong>现场直接说</strong>“这里不改 work mapping，不改 buffer，只提前 release。旧读取还没完成就覆盖 B0，于是合法例子的唯一关键条件被击穿。”</div>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <h2>3. 我们的方法：ordering 必须能承受 skip</h2>
+  <div class="layout">
+    <img class="shot" src="guide-assets/04-rule-annotated.png" alt="规则界面标注">
+    <div class="notes">
+      <ol>
+        <li><span class="green">上方绿框</span>：一条 ordering path 只能依赖共同事件，以及这一对 endpoint 自己拥有的 optional work。</li>
+        <li><span class="red">红框</span>：下拉框选择一个真实 h64 check group。可以从 common events 切换到具体 warp/visit owner。</li>
+        <li><span class="green">下方绿框</span>：读取 candidate pairs、unproved pairs、unproved required orders，以及 A002 exemption 数量。</li>
+      </ol>
+      <p><b>解释：</b>如果证明必须依赖第三个无关 optional region 执行，那么那条 region 被 skip 时，证明就消失。当前规则只覆盖 fixed common control、resolved addresses 和 finite visits。</p>
+      <p><b>不要说：</b><code>proved</code> 不等于数值等价；<code>unproved</code> 不等于 kernel bug；A002 exemption 是显式假设，不是被藏掉的成功。</p>
+      <div class="say"><strong>现场直接说</strong>“我们的核心不是再枚举一个路径，而是找出对 execute/skip 家族都成立的 ordering support。无关 optional work 不能成为必要前提。”</div>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <h2>4. 五个例子：一个讲透，四个用于对照</h2>
+  <div class="layout">
+    <img class="shot" src="guide-assets/05-corpus-annotated.png" alt="真实 kernel 界面标注">
+    <div class="notes">
+      <ol>
+        <li><span class="green">四个绿框</span>：FlashAttention h64、DeepGEMM、ThunderKittens、FlashAttention h128。加上前面的最小 pipeline，共五个例子。</li>
+        <li>h64 与 h128 是同一种 conditional-TMEM 机制，不是两个不同贡献；区别是 visit 数与 choice family 规模。</li>
+        <li>DeepGEMM 展示跨 output 的连续 pipeline state；ThunderKittens 展示 source-read completion 先于 reuse。</li>
+        <li><span class="red">按钮红框</span>：每张卡都能打开原始 PTX 与逐段英文注释版。</li>
+        <li>展开 <b>Negative control, limits &amp; original results</b> 才读取负控制、输入和 receipt；没有 trace 的卡片只给证据，不播放虚假时间线。</li>
+      </ol>
+      <div class="say"><strong>现场直接说</strong>“第一个例子解释机制；这四张卡说明同一问题落在真实 kernel 的不同位置。它们共享 completion、matching、reuse 这条主线，但不假装共享一份完整语义。”</div>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <h2>5. 效率：先说当前真实成立的三件事</h2>
+  <div class="layout">
+    <img class="shot" src="guide-assets/06-efficiency-now-annotated.png" alt="当前效率结果界面标注">
+    <div class="notes">
+      <ol>
+        <li><span class="green">上方绿框</span>：三种当前方法分别是 branch-family proof sharing、guarded conflict-order candidates、batch reachability by source。</li>
+        <li>第一种是本阶段直接实现：N1 从 56.98 s 到 50.53 s，为 1.13×，但 peak RSS 从 0.81 GiB 增至 4.07 GiB。</li>
+        <li>第二种在构造的 N112 上将 query 从 2,216,264 降至 96,128，native analysis 从 308.23 ms 到 232.18 ms；尚无真实 corpus speedup。</li>
+        <li>第三种是 Wasp 已有 bitset backend：严格 probe 为 6.53 ms DFS 对 4.00 ms bitset；全程时间区间重叠，不能宣称 end-to-end speedup。</li>
+        <li><span class="green">下方绿框</span>：只在双方都完整完成时显示 speedup。N2 只有 family 完成；N3 触限。</li>
+      </ol>
+      <div class="say"><strong>现场直接说</strong>“效率不是独立的技巧清单。这里比较的是同一组义务：枚举每个选择，还是共享对整个 family 都成立的证明。当前只有 N1 可以报告完整 speedup。”</div>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <h2>6. 八条历史效率方向：保留结论，不包装成八个成功优化</h2>
+  <div class="layout">
+    <img class="shot" src="guide-assets/07-efficiency-eight-annotated.png" alt="八条效率方向界面标注">
+    <div class="notes">
+      <ol>
+        <li><span class="green">绿框</span>：八张卡逐条写明 idea、历史状态和当前决定。</li>
+        <li>可继续使用的思想：exact-epoch proof domain、observation factorization、targeted reachability、finite DAG proof discipline。</li>
+        <li>没有进入当前实现的方向：old rank/SMT、shared HB expressions、generation partition。</li>
+        <li>明确的负结果：frontier/decomposition/POR 因共享 effects 不能形成通用分解。</li>
+        <li><span class="red">红框</span>：打开当前 Wasp efficiency record 或完整历史记录，核对推导和实验。</li>
+      </ol>
+      <div class="say"><strong>现场直接说</strong>“这些方法没有丢。我们把它们按证据重新分类：哪些已被 Wasp 覆盖，哪些只保留设计原则，哪些实验失败。这样不会把历史探索误报成当前贡献。”</div>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <h2>7. 主动收口：明确什么还没有证明</h2>
+  <div class="layout">
+    <img class="shot" src="guide-assets/08-limits-annotated.png" alt="限制界面标注">
+    <div class="notes">
+      <ol>
+        <li><span class="green">绿框</span>：逐项读限制。当前不覆盖 arbitrary tensor feedback、arbitrary loop length、full cross-output family、whole-kernel numerical equivalence、hardware execution 和全部 28 个历史案例。</li>
+        <li><span class="red">红框</span>：展开 <b>WGMMA status</b>。当前 corpus 没有现成 <code>wgmma.</code> PTX，frontend 也不建模它；tcgen05 或 bulk-group 结果不能冒充 WGMMA migration。</li>
+      </ol>
+      <div class="say"><strong>现场直接说</strong>“这是有限控制家族上的同步与资源复用分析，不是任意循环定理，也不是 Volta 式整 kernel 数值等价检查。限制直接列在主路径末尾。”</div>
+      <h3>五分钟顺序</h3>
+      <ol>
+        <li>30 秒：起始页提出 skip 后 reuse 是否仍安全。</li>
+        <li>90 秒：合法 B0 reuse 与 early-release 单因素反例。</li>
+        <li>60 秒：owner-supported ordering rule。</li>
+        <li>60 秒：四个真实 kernel 卡片。</li>
+        <li>45 秒：三项当前效率与 N1 完整对比。</li>
+        <li>15 秒：限制页收口。</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <h2>8. 现场材料清单</h2>
+  <p>按下面顺序打开即可；主站保持英文，中文仅在本指南中出现。</p>
+  <div class="route"><div><b>主可视化</b><span><a href="index.html#start">index.html#start</a></span></div><div><b>研究简报</b><span><a href="discussion.pdf">discussion.pdf</a></span></div><div><b>原始例子报告</b><span><a href="report.pdf">report.pdf</a></span></div></div>
+  <ul class="resource-list">
+    <li><a href="kernel.ptx.html">最小例子原始 PTX</a></li>
+    <li><a href="loop_branch_2_1.annotated.ptx.html">最小例子注释 PTX</a></li>
+    <li><a href="family-h64.json">h64 family receipt</a></li>
+    <li><a href="family-h128.json">h128 family receipt</a></li>
+    <li><a href="corpus-evidence.json">四个 corpus evidence</a></li>
+    <li><a href="efficiency.json">效率数据</a></li>
+    <li><a href="hb-efficiency-current.md">当前效率研究记录</a></li>
+    <li><a href="hb-efficiency-historical.md">历史八方向记录</a></li>
+    <li><a href="build-receipt.json">站点构建 receipt</a></li>
+  </ul>
+  <div class="say"><strong>最终一句话</strong>“Wasp 已能检查给定控制路径；我们的增量是在明确前提下，把一次 execute/skip 路径检查提升为有限 choice family 的共同检查，并只复用那些在相关 optional work 消失后仍然成立的 ordering arguments。”</div>
+</section>
+</main></body></html>
