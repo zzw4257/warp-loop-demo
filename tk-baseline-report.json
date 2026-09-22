@@ -1,0 +1,331 @@
+{
+  "assumption_dependent": true,
+  "assumption_effects": {
+    "warp_tmem_load_completion": {
+      "read_completion_joins": 0
+    }
+  },
+  "assumption_reporting": "triggered=null means applicability was not measured or analysis was not reached",
+  "assumptions": [
+    {
+      "category": "unclear assumption",
+      "enabled": false,
+      "id": "A001",
+      "key": "warp_tmem_load_completion",
+      "text": "All lanes' TMEM reads complete before any lane receives its register results.",
+      "triggered": false
+    },
+    {
+      "category": "unclear assumption",
+      "enabled": true,
+      "id": "A002",
+      "key": "duplicate_tma_store_benign",
+      "text": "Matching same-warp duplicate TMA stores are reported as warnings instead of races.",
+      "triggered": false
+    },
+    {
+      "category": "unclear assumption",
+      "enabled": true,
+      "id": "A003",
+      "key": "immediate_visibility",
+      "text": "Memory effects are immediately visible when executed; visibility fences add no ordering constraints. Async completion and synchronization remain modeled.",
+      "triggered": true
+    },
+    {
+      "category": "unclear assumption",
+      "enabled": true,
+      "id": "A004",
+      "key": "representative_election",
+      "text": "Election selects lane zero when participating, otherwise the lowest participating lane.",
+      "triggered": true
+    },
+    {
+      "category": "unclear assumption",
+      "enabled": true,
+      "id": "A005",
+      "key": "clc_always_fails",
+      "text": "Every cluster launch cancellation request fails.",
+      "triggered": true
+    }
+  ],
+  "counts": {
+    "edges": 1346778,
+    "events": 479826,
+    "instructions": 93738,
+    "memory_accesses": 315886,
+    "threads": 512
+  },
+  "frontend": {
+    "cluster_completion_joins": 1,
+    "cta_count": 2,
+    "dependency_compression": {
+      "bulk_read_wait": {
+        "consumers": 1024,
+        "emitted_references": 4,
+        "original_references": 6,
+        "prefix_effects": 0
+      },
+      "tcgen_commit": {
+        "consumers": 2,
+        "emitted_references": 9,
+        "original_references": 16,
+        "prefix_effects": 2
+      },
+      "tcgen_load_wait": {
+        "consumers": 256,
+        "emitted_references": 2048,
+        "original_references": 2048,
+        "prefix_effects": 0
+      }
+    },
+    "diagnostic_sample_count": 0,
+    "discharged_codes": [
+      "mma_memory_effect_refinement",
+      "tcgen_pipeline_effect_refinement",
+      "tcgen_commit_notification_order_refinement"
+    ],
+    "executed_records": 117248,
+    "frontend_assumptions": {
+      "assertion_failure_forms": [
+        "trap",
+        "__assertfail"
+      ],
+      "assertion_uses": 0,
+      "clc_failure": true,
+      "clc_uses": 262,
+      "election_policy": {
+        "fallback": "lowest_member",
+        "preferred_lane": 0,
+        "strategy": "preferred_member"
+      },
+      "election_uses": 224,
+      "fixed_election": true,
+      "immediate_visibility": true,
+      "isolated_launch": true,
+      "noalias_unbounded": false,
+      "pointer_contract": {
+        "aliasing": "distinct_objects_noalias",
+        "extent_bytes": "unbounded"
+      },
+      "trap_only_equality_assertions_hold": true
+    },
+    "group2_progress": {
+      "blocked": [],
+      "checked_pairs": 3,
+      "premises": [
+        "Baseline synchronization and asynchronous work must independently make progress.",
+        "Resident peer CTAs must be scheduled fairly and have admitted TMEM capacity.",
+        "Allocation placement and retirement RequiredOrders are separate obligations.",
+        "Source references, actor ordering, and collective participation must be validated."
+      ]
+    },
+    "implementation": "cpp",
+    "input_objects": [
+      {
+        "bytes": 8,
+        "object": "A",
+        "offset": 0,
+        "parameter": "_Z6kernelI6configILi256ELi256ELi64ELi8ELb1ELi5ELi4EEEv7globalsIT_E_param_0",
+        "source": "declaration"
+      },
+      {
+        "bytes": 8,
+        "object": "B",
+        "offset": 384,
+        "parameter": "_Z6kernelI6configILi256ELi256ELi64ELi8ELb1ELi5ELi4EEEv7globalsIT_E_param_0",
+        "source": "declaration"
+      },
+      {
+        "bytes": 8,
+        "object": "D",
+        "offset": 768,
+        "parameter": "_Z6kernelI6configILi256ELi256ELi64ELi8ELb1ELi5ELi4EEEv7globalsIT_E_param_0",
+        "source": "declaration"
+      }
+    ],
+    "lowered_instruction_count": 93738,
+    "mma_refinement": {
+      "blocked": [],
+      "discharged": 4
+    },
+    "reached_opcodes": {
+      "add.s32": 10810,
+      "add.s64": 2067,
+      "add.u64": 512,
+      "and.b32": 5460,
+      "and.b64": 2050,
+      "bar.sync": 2816,
+      "barrier.cluster.arrive.release.aligned": 512,
+      "barrier.cluster.wait.acquire": 5,
+      "barrier.cluster.wait.acquire.aligned": 256,
+      "bra": 5681,
+      "bra.uni": 261,
+      "clusterlaunchcontrol.query_cancel.is_canceled.pred.b128": 261,
+      "clusterlaunchcontrol.try_cancel.async.shared::cta.mbarrier::complete_tx::bytes.multicast::cluster::all.b128": 1,
+      "cp.async.bulk.commit_group": 8,
+      "cp.async.bulk.tensor.5d.global.shared::cta.tile.bulk_group.L2::cache_hint": 8,
+      "cp.async.bulk.tensor.5d.shared::cluster.global.tile.mbarrier::complete_tx::bytes.cta_group::2.multicast::cluster": 4,
+      "cp.async.bulk.wait_group.read": 1024,
+      "createpolicy.fractional.L2::evict_first.b64": 8,
+      "cvt.rn.bf16x2.f32": 32768,
+      "cvt.u16.u32": 2,
+      "cvt.u32.u64": 260,
+      "cvt.u64.u32": 1090,
+      "cvta.param.u64": 260,
+      "cvta.shared.u64": 1088,
+      "cvta.to.shared.u64": 260,
+      "div.s32": 516,
+      "elect.sync": 224,
+      "fence.proxy.async.shared::cta": 9,
+      "griddepcontrol.launch_dependents": 2,
+      "griddepcontrol.wait": 2,
+      "ld.local.b32": 257,
+      "ld.param.b32": 512,
+      "ld.param.v4.b32": 512,
+      "ld.shared.b128": 261,
+      "ld.shared.b32": 257,
+      "mapa.shared::cluster.u32": 15,
+      "mbarrier.arrive.expect_tx.shared::cta.b64": 3,
+      "mbarrier.arrive.release.cta.shared::cta.b64": 2,
+      "mbarrier.arrive.shared::cluster.b64": 11,
+      "mbarrier.init.shared::cta.b64": 34,
+      "mbarrier.try_wait.parity.shared::cta.b64": 843,
+      "mov.b16": 2,
+      "mov.b32": 4597,
+      "mov.b64": 1024,
+      "mov.u32": 1282,
+      "mul.hi.u32": 3,
+      "mul.lo.s32": 519,
+      "mul.wide.u32": 258,
+      "neg.s32": 1,
+      "not.b32": 260,
+      "or.b32": 764,
+      "or.b64": 2,
+      "prefetch.tensormap": 6,
+      "ret": 512,
+      "selp.b32": 258,
+      "selp.u32": 485,
+      "setmaxnreg.dec.sync.aligned.u32": 256,
+      "setp.eq.b32": 1001,
+      "setp.eq.b64": 1536,
+      "setp.eq.u32": 4,
+      "setp.ge.s32": 258,
+      "setp.lt.s32": 3,
+      "setp.lt.u32": 2,
+      "setp.ne.b32": 4608,
+      "shl.b32": 2839,
+      "shr.s32": 3338,
+      "shr.u32": 6667,
+      "shr.u64": 2,
+      "st.local.v2.b32": 257,
+      "stmatrix.sync.aligned.m8n8.x4.shared::cta.b16": 8192,
+      "sub.s32": 779,
+      "tcgen05.alloc.cta_group::2.sync.aligned.shared::cta.b32": 64,
+      "tcgen05.commit.cta_group::2.mbarrier::arrive::one.shared::cluster.multicast::cluster.b64": 2,
+      "tcgen05.dealloc.cta_group::2.sync.aligned.b32": 64,
+      "tcgen05.ld.sync.aligned.16x256b.x8.b32": 2048,
+      "tcgen05.mma.cta_group::2.kind::f16": 4,
+      "tcgen05.relinquish_alloc_permit.cta_group::2.sync.aligned": 64,
+      "tcgen05.wait::ld.sync.aligned": 256,
+      "xor.b32": 4099
+    },
+    "tcgen_history_refinement": {
+      "blocked": [],
+      "notifications": 2,
+      "operations": 4
+    },
+    "thread_count": 512,
+    "unsupported_occurrence_counts": {},
+    "user_branch_decisions": []
+  },
+  "frontend_assumptions": {
+    "assertion_failure_forms": [
+      "trap",
+      "__assertfail"
+    ],
+    "assertion_uses": 0,
+    "clc_failure": true,
+    "clc_uses": 262,
+    "election_policy": {
+      "fallback": "lowest_member",
+      "preferred_lane": 0,
+      "strategy": "preferred_member"
+    },
+    "election_uses": 224,
+    "fixed_election": true,
+    "immediate_visibility": true,
+    "isolated_launch": true,
+    "noalias_unbounded": false,
+    "pointer_contract": {
+      "aliasing": "distinct_objects_noalias",
+      "extent_bytes": "unbounded"
+    },
+    "trap_only_equality_assertions_hold": true
+  },
+  "implementation": "cpp",
+  "memory_analysis": {
+    "address_candidates": 449798,
+    "exhaustive": false,
+    "hb_algorithm": "batched-bitset",
+    "hb_batches": 138,
+    "hb_dfs_queries": 0,
+    "hb_edge_visits": 23185288,
+    "hb_filtered_queries": 0,
+    "hb_peak_index_bytes": 59858816,
+    "hb_queries": 449798,
+    "hb_query_seconds": 0.107561917,
+    "overlap_queries": 0,
+    "strategy": "conflict-first",
+    "unordered_candidates_examined": 0
+  },
+  "mma_operand_ordering": {},
+  "mode": "verify",
+  "peak_rss_mib": 2398.125,
+  "pipeline_elapsed_seconds": 3.448412875,
+  "race_count": 0,
+  "race_samples_truncated": false,
+  "races": [],
+  "required_orders": 182341,
+  "schema": "spverify.native-result/v1",
+  "search_complete": true,
+  "semantic_assumptions": {
+    "clc_always_fails": true,
+    "duplicate_tma_store_benign": true,
+    "immediate_visibility": true,
+    "representative_election": true,
+    "warp_tmem_load_completion": false
+  },
+  "source_violations": [],
+  "status": "race_free",
+  "unresolved_count": 0,
+  "verification_limitations": [],
+  "warning_count": 0,
+  "warning_samples_truncated": false,
+  "warnings": [],
+  "wellsync_timeout_seconds": 120.0,
+  "whole_pipeline_timeout_seconds": 120.0,
+  "_process": {
+    "command": [
+      "/Users/zzw4257/wasp-upstream-review-20260920/build/cmake/spverify-ptx",
+      "--ptx",
+      "/Users/zzw4257/wasp-upstream-review-20260920/corpus/thunderkittens__thunderkittens_bf16_b200_gemm__sm_100a.ptx",
+      "--config",
+      "build/corpus-completion-tk-v1/input.json",
+      "--wellsync-timeout-seconds",
+      "120",
+      "--rss-limit-mib",
+      "8192",
+      "--sync-threads",
+      "8",
+      "--timeout-seconds",
+      "120",
+      "--report",
+      "build/corpus-completion-tk-v1/baseline.native.json",
+      "--dump-source",
+      "build/corpus-completion-tk-v1/baseline.source.json"
+    ],
+    "returncode": 0,
+    "elapsed_seconds": 3.4764866249170154,
+    "stderr": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-completion-tk-v1/baseline.stderr"
+  }
+}

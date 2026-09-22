@@ -1,0 +1,647 @@
+{
+  "assumption_dependent": true,
+  "assumption_effects": {
+    "warp_tmem_load_completion": {
+      "read_completion_joins": 0
+    }
+  },
+  "assumption_reporting": "triggered=null means applicability was not measured or analysis was not reached",
+  "assumptions": [
+    {
+      "category": "unclear assumption",
+      "enabled": false,
+      "id": "A001",
+      "key": "warp_tmem_load_completion",
+      "text": "All lanes' TMEM reads complete before any lane receives its register results.",
+      "triggered": false
+    },
+    {
+      "category": "unclear assumption",
+      "enabled": true,
+      "id": "A002",
+      "key": "duplicate_tma_store_benign",
+      "text": "Matching same-warp duplicate TMA stores are reported as warnings instead of races.",
+      "triggered": null
+    },
+    {
+      "category": "unclear assumption",
+      "enabled": true,
+      "id": "A003",
+      "key": "immediate_visibility",
+      "text": "Memory effects are immediately visible when executed; visibility fences add no ordering constraints. Async completion and synchronization remain modeled.",
+      "triggered": true
+    },
+    {
+      "category": "unclear assumption",
+      "enabled": true,
+      "id": "A004",
+      "key": "representative_election",
+      "text": "Election selects lane zero when participating, otherwise the lowest participating lane.",
+      "triggered": true
+    },
+    {
+      "category": "unclear assumption",
+      "enabled": true,
+      "id": "A005",
+      "key": "clc_always_fails",
+      "text": "Every cluster launch cancellation request fails.",
+      "triggered": false
+    }
+  ],
+  "counterexample": {
+    "candidate_order": {
+      "events": [
+        0,
+        5936,
+        5980,
+        6024,
+        6068,
+        6112,
+        6156,
+        6200,
+        6244,
+        6288,
+        6332,
+        6376,
+        6420,
+        6464,
+        6508,
+        6552,
+        6596,
+        6640,
+        6684,
+        6728,
+        6772,
+        6816,
+        6860,
+        6904,
+        6948,
+        6992,
+        7036,
+        7080,
+        7124,
+        7168,
+        7212,
+        7256
+      ],
+      "total": 36511,
+      "truncated": true
+    },
+    "candidate_order_preserved": true,
+    "executed_prefix": {
+      "events": [
+        0,
+        5936,
+        5980,
+        6024,
+        6068,
+        6112,
+        6156,
+        6200,
+        6244,
+        6288,
+        6332,
+        6376,
+        6420,
+        6464,
+        6508,
+        6552,
+        6596,
+        6640,
+        6684,
+        6728,
+        6772,
+        6816,
+        6860,
+        6904,
+        6948,
+        6992,
+        7036,
+        7080,
+        7124,
+        7168,
+        7212,
+        7256
+      ],
+      "total": 36510,
+      "truncated": true
+    },
+    "replayed_candidate_order": {
+      "events": [
+        0,
+        5936,
+        5980,
+        6024,
+        6068,
+        6112,
+        6156,
+        6200,
+        6244,
+        6288,
+        6332,
+        6376,
+        6420,
+        6464,
+        6508,
+        6552,
+        6596,
+        6640,
+        6684,
+        6728,
+        6772,
+        6816,
+        6860,
+        6904,
+        6948,
+        6992,
+        7036,
+        7080,
+        7124,
+        7168,
+        7212,
+        7256
+      ],
+      "total": 36511,
+      "truncated": true
+    },
+    "stop": {
+      "barrier": 0,
+      "code": "missing_successful_wait_handoff",
+      "event": 13801,
+      "message": "next-phase arrival occurred before a successful prior-phase wait"
+    },
+    "unexecuted_candidate": {
+      "events": [
+        13801
+      ],
+      "total": 1,
+      "truncated": false
+    }
+  },
+  "counts": {
+    "edges": 399916,
+    "events": 104684,
+    "instructions": 22529,
+    "memory_accesses": 58066,
+    "threads": 512
+  },
+  "frontend": {
+    "cluster_completion_joins": 3,
+    "cta_count": 2,
+    "dependency_compression": {
+      "bulk_read_wait": {
+        "consumers": 128,
+        "emitted_references": 0,
+        "original_references": 0,
+        "prefix_effects": 0
+      },
+      "tcgen_commit": {
+        "consumers": 6,
+        "emitted_references": 33,
+        "original_references": 128,
+        "prefix_effects": 6
+      },
+      "tcgen_load_wait": {
+        "consumers": 1024,
+        "emitted_references": 2048,
+        "original_references": 5120,
+        "prefix_effects": 0
+      }
+    },
+    "diagnostic_sample_count": 0,
+    "discharged_codes": [
+      "mma_memory_effect_refinement",
+      "tcgen_pipeline_effect_refinement",
+      "tcgen_commit_notification_order_refinement"
+    ],
+    "executed_records": 60426,
+    "frontend_assumptions": {
+      "assertion_failure_forms": [
+        "trap",
+        "__assertfail"
+      ],
+      "assertion_uses": 256,
+      "clc_failure": true,
+      "clc_uses": 0,
+      "election_policy": {
+        "fallback": "lowest_member",
+        "preferred_lane": 0,
+        "strategy": "preferred_member"
+      },
+      "election_uses": 576,
+      "fixed_election": true,
+      "immediate_visibility": true,
+      "isolated_launch": true,
+      "noalias_unbounded": false,
+      "pointer_contract": {
+        "aliasing": "distinct_objects_noalias",
+        "extent_bytes": "unbounded"
+      },
+      "trap_only_equality_assertions_hold": true
+    },
+    "group2_progress": {
+      "blocked": [],
+      "checked_pairs": 2,
+      "premises": [
+        "Baseline synchronization and asynchronous work must independently make progress.",
+        "Resident peer CTAs must be scheduled fairly and have admitted TMEM capacity.",
+        "Allocation placement and retirement RequiredOrders are separate obligations.",
+        "Source references, actor ordering, and collective participation must be validated."
+      ]
+    },
+    "implementation": "cpp",
+    "input_objects": [],
+    "lowered_instruction_count": 22529,
+    "mma_refinement": {
+      "blocked": [],
+      "discharged": 16
+    },
+    "reached_opcodes": {
+      "add.s32": 6748,
+      "and.b32": 2602,
+      "bar.sync": 1024,
+      "bar.warp.sync": 768,
+      "barrier.cluster.arrive.relaxed.aligned": 1536,
+      "barrier.cluster.wait.aligned": 1536,
+      "bra": 3476,
+      "bra.uni": 102,
+      "cp.async.bulk.commit_group": 4,
+      "cp.async.bulk.tensor.2d.cta_group::2.shared::cluster.global.mbarrier::complete_tx::bytes.L2::cache_hint": 16,
+      "cp.async.bulk.tensor.2d.global.shared::cta.bulk_group": 8,
+      "cp.async.bulk.wait_group.read": 128,
+      "cvt.rn.bf16x2.f32": 4096,
+      "cvt.u64.u32": 1280,
+      "cvta.param.u64": 452,
+      "div.u32": 16,
+      "elect.sync": 576,
+      "fence.mbarrier_init.release.cluster": 2,
+      "fence.proxy.async.shared::cta": 512,
+      "griddepcontrol.wait": 512,
+      "ld.param.b32": 512,
+      "ld.shared.u32": 256,
+      "mapa.shared::cluster.u32": 516,
+      "mbarrier.arrive.expect_tx.shared::cta.b64": 4,
+      "mbarrier.arrive.shared::cluster.b64": 516,
+      "mbarrier.init.shared::cta.b64": 56,
+      "mbarrier.try_wait.parity.shared::cta.b64": 744,
+      "min.u32": 8,
+      "mov.b16": 6,
+      "mov.b32": 8508,
+      "mov.b64": 1648,
+      "mov.s32": 594,
+      "mov.u32": 1834,
+      "mul.hi.u32": 290,
+      "mul.lo.s32": 16,
+      "neg.s32": 290,
+      "not.b32": 354,
+      "not.pred": 258,
+      "or.b32": 4,
+      "prefetch.tensormap": 192,
+      "ret": 512,
+      "selp.b32": 336,
+      "setp.eq.b32": 2584,
+      "setp.ge.u32": 290,
+      "setp.lt.s32": 32,
+      "setp.lt.u32": 290,
+      "setp.ne.b32": 3506,
+      "shfl.sync.idx.b32": 768,
+      "shl.b32": 2202,
+      "shr.u32": 2020,
+      "stmatrix.sync.aligned.x4.m8n8.shared.b16.trans": 1024,
+      "sub.s32": 24,
+      "tcgen05.alloc.cta_group::2.sync.aligned.shared::cta.b32": 64,
+      "tcgen05.commit.cta_group::2.mbarrier::arrive::one.shared::cluster.multicast::cluster.b64": 6,
+      "tcgen05.dealloc.cta_group::2.sync.aligned.b32": 64,
+      "tcgen05.fence::after_thread_sync": 704,
+      "tcgen05.fence::before_thread_sync": 512,
+      "tcgen05.ld.sync.aligned.16x256b.x1.b32": 2048,
+      "tcgen05.mma.cta_group::2.kind::f16": 16,
+      "tcgen05.wait::ld.sync.aligned": 1024,
+      "xor.b32": 400
+    },
+    "tcgen_history_refinement": {
+      "blocked": [],
+      "notifications": 6,
+      "operations": 16
+    },
+    "thread_count": 512,
+    "unsupported_occurrence_counts": {},
+    "user_branch_decisions": []
+  },
+  "frontend_assumptions": {
+    "assertion_failure_forms": [
+      "trap",
+      "__assertfail"
+    ],
+    "assertion_uses": 256,
+    "clc_failure": true,
+    "clc_uses": 0,
+    "election_policy": {
+      "fallback": "lowest_member",
+      "preferred_lane": 0,
+      "strategy": "preferred_member"
+    },
+    "election_uses": 576,
+    "fixed_election": true,
+    "immediate_visibility": true,
+    "isolated_launch": true,
+    "noalias_unbounded": false,
+    "pointer_contract": {
+      "aliasing": "distinct_objects_noalias",
+      "extent_bytes": "unbounded"
+    },
+    "trap_only_equality_assertions_hold": true
+  },
+  "implementation": "cpp",
+  "message": "next-phase arrival occurred before a successful prior-phase wait",
+  "mma_operand_ordering": {},
+  "mode": "verify",
+  "peak_rss_mib": 907.203125,
+  "pipeline_elapsed_seconds": 0.998979541,
+  "provenance_events_total": 104684,
+  "rejection": {
+    "barrier": 0,
+    "code": "missing_successful_wait_handoff",
+    "event": 13801,
+    "message": "next-phase arrival occurred before a successful prior-phase wait"
+  },
+  "rejection_kind": "semantic_violation",
+  "required_orders": 200528,
+  "schema": "spverify.native-result/v1",
+  "semantic_assumptions": {
+    "clc_always_fails": true,
+    "duplicate_tma_store_benign": true,
+    "immediate_visibility": true,
+    "representative_election": true,
+    "warp_tmem_load_completion": false
+  },
+  "source_event_scope": "reported_witness_events",
+  "source_events": [
+    {
+      "column": 2,
+      "event": 0,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 0,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 5936,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 33,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 5980,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 50,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6024,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 67,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6068,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 84,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6112,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 101,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6156,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 118,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6200,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 135,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6244,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 152,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6288,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 169,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6332,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 186,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6376,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 203,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6420,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 220,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6464,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 237,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6508,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 254,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6552,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 271,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6596,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 288,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6640,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 305,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6684,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 322,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6728,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 339,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6772,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 356,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6816,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 373,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6860,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 390,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6904,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 407,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6948,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 424,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 6992,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 441,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 7036,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 458,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 7080,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 475,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 7124,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 492,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 7168,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 509,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 7212,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 526,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 7256,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 543,
+      "line": 49
+    },
+    {
+      "column": 2,
+      "event": 13801,
+      "file": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "instruction": 698,
+      "line": 856
+    }
+  ],
+  "source_violations": [],
+  "status": "synchronization_candidate",
+  "synthetic_events": [],
+  "unmapped_witness_events": [],
+  "verification_limitations": [],
+  "warnings": [],
+  "wellsync_timeout_seconds": 120.0,
+  "whole_pipeline_timeout_seconds": 120.0,
+  "witness_event_list_limit": 32,
+  "witness_event_lists_truncated": true,
+  "_process": {
+    "command": [
+      "/Users/zzw4257/wasp-upstream-review-20260920/build/cmake/spverify-ptx",
+      "--ptx",
+      "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/mutation.ptx",
+      "--config",
+      "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/input.json",
+      "--wellsync-timeout-seconds",
+      "120",
+      "--rss-limit-mib",
+      "8192",
+      "--sync-threads",
+      "8",
+      "--timeout-seconds",
+      "120",
+      "--report",
+      "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/native.json",
+      "--dump-source",
+      "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/source.json"
+    ],
+    "returncode": 0,
+    "elapsed_seconds": 1.014587749959901,
+    "stderr": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/native.stderr",
+    "profile": "/Users/zzw4257/wasp-upstream-review-20260920/build/corpus-loop-branch-reset-v1/profile.jsonl"
+  }
+}

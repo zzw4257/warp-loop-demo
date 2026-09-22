@@ -1,0 +1,268 @@
+{
+  "single_changed_ptx_line": 5690,
+  "baseline": "race_free",
+  "weakened": "race_candidate",
+  "counts": {
+    "edges": 1346778,
+    "events": 479826,
+    "instructions": 93738,
+    "memory_accesses": 315886,
+    "threads": 512
+  },
+  "race": {
+    "first": {
+      "access_index": 0,
+      "actor": 0,
+      "bytes": 128,
+      "effect_index": 0,
+      "endpoint": {
+        "address": 66,
+        "kind": "memory"
+      },
+      "event": 471,
+      "instruction": 101,
+      "location": {
+        "column": 29,
+        "file": "/home/mengdi/spverify/upstream-survey/ThunderKittens/include/ops/thread/memory/tile/tma.cuh",
+        "line": 130
+      },
+      "mode": "read"
+    },
+    "overlap": "constant byte ranges intersect",
+    "region": {
+      "address_space": "shared",
+      "allocation": "cta:(0, 0, 0):shared:physical.shared.cta.0",
+      "bytes": 4,
+      "offset": 164864
+    },
+    "second": {
+      "access_index": 0,
+      "actor": 0,
+      "bytes": 4,
+      "effect_index": 1,
+      "endpoint": {
+        "address": 66,
+        "kind": "memory"
+      },
+      "event": 4010,
+      "instruction": 263,
+      "location": {
+        "column": 26,
+        "file": "/home/mengdi/spverify/upstream-survey/ThunderKittens/include/ops/thread/memory/tile/../../util/util.cuh",
+        "line": 104
+      },
+      "mode": "write"
+    }
+  },
+  "source_paths": {
+    "baseline": {
+      "path": "build/corpus-completion-tk-v1/baseline.source.json",
+      "sha256": "b1cbeb38879c20be589b81c2e4a5a5ce9a681323175780403689090022840152"
+    },
+    "weaken-first-reuse": {
+      "path": "build/corpus-completion-tk-v1/weaken-first-reuse.source.json",
+      "sha256": "96e21ab52649f8729e26051aba4f0287f3038c246fa8183c3f9be558b78d3ca1"
+    }
+  },
+  "waits": {
+    "baseline": [
+      {
+        "id": 81,
+        "origin": {
+          "file": "/Users/zzw4257/wasp-upstream-review-20260920/corpus/thunderkittens__thunderkittens_bf16_b200_gemm__sm_100a.ptx",
+          "instruction_index": 939,
+          "occurrence": 0,
+          "opcode": "cp.async.bulk.wait_group.read"
+        },
+        "op": {
+          "kind": "await",
+          "requirements": []
+        }
+      },
+      {
+        "id": 171,
+        "origin": {
+          "file": "/Users/zzw4257/wasp-upstream-review-20260920/corpus/thunderkittens__thunderkittens_bf16_b200_gemm__sm_100a.ptx",
+          "instruction_index": 995,
+          "occurrence": 0,
+          "opcode": "cp.async.bulk.wait_group.read"
+        },
+        "op": {
+          "kind": "await",
+          "requirements": []
+        }
+      },
+      {
+        "id": 261,
+        "origin": {
+          "file": "/Users/zzw4257/wasp-upstream-review-20260920/corpus/thunderkittens__thunderkittens_bf16_b200_gemm__sm_100a.ptx",
+          "instruction_index": 1052,
+          "occurrence": 0,
+          "opcode": "cp.async.bulk.wait_group.read"
+        },
+        "op": {
+          "kind": "await",
+          "requirements": [
+            {
+              "effect_index": 0,
+              "instruction": 101,
+              "milestone": "reads_complete"
+            }
+          ]
+        }
+      },
+      {
+        "id": 354,
+        "origin": {
+          "file": "/Users/zzw4257/wasp-upstream-review-20260920/corpus/thunderkittens__thunderkittens_bf16_b200_gemm__sm_100a.ptx",
+          "instruction_index": 1126,
+          "occurrence": 0,
+          "opcode": "cp.async.bulk.wait_group.read"
+        },
+        "op": {
+          "kind": "await",
+          "requirements": [
+            {
+              "effect_index": 0,
+              "instruction": 191,
+              "milestone": "reads_complete"
+            }
+          ]
+        }
+      }
+    ],
+    "weaken-first-reuse": [
+      {
+        "id": 81,
+        "origin": {
+          "file": "build/corpus-completion-tk-v1/weaken-first-reuse.ptx",
+          "instruction_index": 939,
+          "occurrence": 0,
+          "opcode": "cp.async.bulk.wait_group.read"
+        },
+        "op": {
+          "kind": "await",
+          "requirements": []
+        }
+      },
+      {
+        "id": 171,
+        "origin": {
+          "file": "build/corpus-completion-tk-v1/weaken-first-reuse.ptx",
+          "instruction_index": 995,
+          "occurrence": 0,
+          "opcode": "cp.async.bulk.wait_group.read"
+        },
+        "op": {
+          "kind": "await",
+          "requirements": []
+        }
+      },
+      {
+        "id": 261,
+        "origin": {
+          "file": "build/corpus-completion-tk-v1/weaken-first-reuse.ptx",
+          "instruction_index": 1052,
+          "occurrence": 0,
+          "opcode": "cp.async.bulk.wait_group.read"
+        },
+        "op": {
+          "kind": "await",
+          "requirements": []
+        }
+      },
+      {
+        "id": 354,
+        "origin": {
+          "file": "build/corpus-completion-tk-v1/weaken-first-reuse.ptx",
+          "instruction_index": 1126,
+          "occurrence": 0,
+          "opcode": "cp.async.bulk.wait_group.read"
+        },
+        "op": {
+          "kind": "await",
+          "requirements": [
+            {
+              "effect_index": 0,
+              "instruction": 101,
+              "milestone": "reads_complete"
+            },
+            {
+              "effect_index": 0,
+              "instruction": 191,
+              "milestone": "reads_complete"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "race_origins": [
+    {
+      "id": 101,
+      "actor": 0,
+      "location": {
+        "column": 29,
+        "file": "/home/mengdi/spverify/upstream-survey/ThunderKittens/include/ops/thread/memory/tile/tma.cuh",
+        "line": 130
+      },
+      "ptx_origin": {
+        "file": "build/corpus-completion-tk-v1/weaken-first-reuse.ptx",
+        "instruction_index": 956,
+        "occurrence": 0,
+        "opcode": "cp.async.bulk.tensor.5d.global.shared::cta.tile.bulk_group.L2::cache_hint"
+      }
+    },
+    {
+      "id": 263,
+      "actor": 0,
+      "location": {
+        "column": 26,
+        "file": "/home/mengdi/spverify/upstream-survey/ThunderKittens/include/ops/thread/memory/tile/../../util/util.cuh",
+        "line": 104
+      },
+      "ptx_origin": {
+        "file": "build/corpus-completion-tk-v1/weaken-first-reuse.ptx",
+        "instruction_index": 1054,
+        "occurrence": 0,
+        "opcode": "stmatrix.sync.aligned.m8n8.x4.shared::cta.b16"
+      }
+    }
+  ],
+  "actors": [
+    {
+      "cta": 0,
+      "id": 0,
+      "lane": 0,
+      "warp": 0
+    }
+  ],
+  "completion_obligation": "The first bulk reader is required before the third slice in the baseline. Weakening only that wait defers the same requirement to the fourth slice, which is too late to protect the third slice's overwrite.",
+  "replay": {
+    "boundary": "Certified DAG linearization and Wasp event-model replay; not PTX operational or hardware replay.",
+    "witnesses": [
+      {
+        "model_replay_succeeded": true,
+        "orientation_preserved": true,
+        "read": 471,
+        "requested_order_preserved": true,
+        "unexecuted_count": 0,
+        "write": 4010,
+        "write_first": false,
+        "checked_executed_edges": 1346778,
+        "certificate_only_endpoint_edges": 8801
+      },
+      {
+        "model_replay_succeeded": true,
+        "orientation_preserved": true,
+        "read": 471,
+        "requested_order_preserved": true,
+        "unexecuted_count": 0,
+        "write": 4010,
+        "write_first": true,
+        "checked_executed_edges": 1346778,
+        "certificate_only_endpoint_edges": 8801
+      }
+    ]
+  }
+}

@@ -64,22 +64,40 @@ function renderTrace() {
   fields.forEach(([name, value]) => { const row = el("div", undefined, "evidence-row"); row.append(el("small", name), el("strong", String(value))); card.append(row); });
 }
 
-const ruleText = [
-  ["Common skeleton", "Hide optional effects. Arrive, wait, generation and resource ownership stay fixed. This is the baseline certificate.", "common"],
-  ["One optional region", "Open one region. It adds a read, store and completion requirement owned by exactly one participant / visit.", "optional"],
-  ["Endpoint pair", "Choose the conflict endpoints. The available path uses common events plus owners A and B; a visual candidate is not yet HB.", "candidate"],
-  ["Third owner", "Open a third region. If the only path now depends on C, the pair is unproved for a family that may skip C.", "unproved"],
-];
-function renderRule(index = 0) { document.querySelectorAll("[data-rule-step]").forEach((b) => b.setAttribute("aria-pressed", String(Number(b.dataset.ruleStep) === index))); const [title, text, cls] = ruleText[index]; const root = $("rule-stage"); root.replaceChildren(el("span", `STAGE ${index + 1}`, "kicker"), el("h3", title), el("p", text), el("div", index === 2 ? "A ── candidate path ── B" : index === 3 ? "A ──?── B   (depends on C)" : index === 1 ? "common + A(optional)" : "common arrivals / generation", `rule-sketch ${cls}`), el("span", index === 2 ? "illustrative admissible support · no computed verdict" : index === 3 ? "illustrative unsupported path · not a bug witness" : "candidate relation", `rule-status ${cls}`)); }
-document.querySelectorAll("[data-rule-step]").forEach((b) => b.addEventListener("click", () => renderRule(Number(b.dataset.ruleStep))));
+function ownerName(id) {
+  const owner = data.family.owners.find((row) => row.owner_index === id).owner;
+  return `warp ${owner.warp_id}, visit ${owner.branch_visit + 1}`;
+}
+function renderRule(index = data.family.groups.findIndex((group) => group.support.length === 0)) {
+  const groups = data.family.groups;
+  const selected = groups[index];
+  $("rule-groups").replaceChildren(...groups.map((group, i) => {
+    const label = group.support.length ? group.support.map(ownerName).join(" + ") : "Common events only";
+    const button = el("button", label);
+    button.setAttribute("aria-pressed", String(index === i));
+    button.addEventListener("click", () => renderRule(i));
+    return button;
+  }));
+  const stage = $("rule-stage");
+  stage.replaceChildren(el("span", `RECORDED GROUP ${index + 1} / ${groups.length}`, "kicker"),
+    el("h3", selected.support.length ? selected.support.map(ownerName).join(" + ") : "Common events only"),
+    el("p", "Allowed optional owners for this recorded check: " + (selected.support.length ? selected.support.map(ownerName).join("; ") : "none") + ". Other owners' optional work cannot supply this group's ordering arguments."));
+  const fields = [["Candidate access pairs", selected.candidate_pairs], ["Required-order endpoints", selected.required_endpoints],
+    ["Unproved pairs", selected.unproved_pairs], ["Unproved required orders", selected.unproved_required_orders],
+    ["Duplicate-TMA warnings in this group", selected.duplicate_tma_warnings]];
+  const grid = el("div", undefined, "boundary-grid");
+  fields.forEach(([label, value]) => { const cell = el("div"); cell.append(el("b", fmt(value)), el("span", label)); grid.append(cell); });
+  stage.append(grid, el("p", `Source: family-h64.json · groups[${index}]. Across the full family, ${fmt(data.family.exempted_unordered_warning_pairs)} unordered pairs remain exempted under A002; zero unproved nonexempt obligations is conditional on that assumption.`, "note"));
+}
 
-function renderCorpus() { const root = $("corpus-grid"); data.corpus.cards.forEach((card) => { const article = el("article", undefined, "corpus-card"); article.append(el("span", card.id.toUpperCase(), "card-id"), el("h3", card.mechanism), el("p", card.source, "muted")); [["source / PTX", card.ptx], ["input", card.input], ["positive", card.positive], ["negative", card.negative], ["verdict", card.verdict], ["scope", card.scope], ["remaining", card.remaining]].forEach(([a, b]) => { const d = el("div", undefined, "corpus-field"); d.append(el("small", a), el("span", b)); article.append(d); }); root.append(article); }); }
+function renderCorpus() { const root = $("corpus-grid"); data.corpus.cards.forEach((card) => { const article = el("article", undefined, "corpus-card"); article.append(el("span", card.id.toUpperCase(), "card-id"), el("h3", card.mechanism), el("p", card.source, "muted")); [["source / PTX", card.ptx], ["input", card.input], ["positive", card.positive], [card.negative_label || "negative control", card.negative], ["verdict", card.verdict], ["scope", card.scope], ["remaining", card.remaining]].forEach(([a, b]) => { const d = el("div", undefined, "corpus-field"); d.append(el("small", a), el("span", b)); article.append(d); }); root.append(article); }); }
 
 function costText(arm) { if (arm.status === "complete") return `${arm.time.toFixed(2)} s [${arm.range.map((x) => x.toFixed(2)).join("–")}]`; return "incomplete"; }
 function renderEfficiency() { const e = data.efficiency; $("efficiency-intro").textContent = `${e.same_obligations}. Speedup appears only for two complete arms.`; const root = $("efficiency-body"); e.rows.forEach((row) => { const tr = el("tr"); const baseMemory = row.enumeration.memory ? row.enumeration.memory.median_gib.toFixed(2) : "—"; const familyMemory = row.family.memory ? row.family.memory.median_gib.toFixed(2) : "—"; const memory = `${baseMemory} / ${familyMemory} GiB (enum / family)`; [row.visits, costText(row.enumeration), costText(row.family), memory, `${row.enumeration.stop} / ${row.family.stop}`, row.verdict, row.speedup == null ? "—" : `${row.speedup.toFixed(2)}×`].forEach((v) => tr.append(el("td", String(v)))); root.append(tr); }); $("efficiency-notes").replaceChildren(...e.notes.map((n) => el("li", n))); }
 function renderLimits() { const root = $("limits-grid"); ["arbitrary tensor feedback", "arbitrary loop length", "full cross-output family", "exact SM90 WGMMA semantics", "whole-kernel numerical equivalence", "hardware execution", "all 28 historical cases"].forEach((label) => { const d = el("div", undefined, "limit-card"); d.append(el("b", "OPEN"), el("span", label)); root.append(d); }); }
 
 window.addEventListener("hashchange", showView); renderModes(); renderTrace(); renderRule(); renderCorpus(); renderEfficiency(); renderLimits(); showView();
+$("contribution-scope").textContent = `h64: ${data.family.owners.length} independent warp/visit choices, ${data.family.choice_count} combinations. h128: ${data.corpus.raw.h128.owners.length} choices, ${2 ** data.corpus.raw.h128.owners.length} combinations. These are fixed-control, resolved-address model families, not a proof for arbitrary tensor inputs.`;
 document.querySelectorAll(".corpus-card").forEach((article, i) => {
   const card = data.corpus.cards[i];
   const filename = card.ptx.split(":")[0].split("/").pop().replace(/\.ptx$/, ".annotated.ptx");
@@ -87,4 +105,12 @@ document.querySelectorAll(".corpus-card").forEach((article, i) => {
   link.href = filename;
   link.download = filename;
   article.append(link);
+  for (const evidence of card.evidence_links || []) {
+    const row = el("p");
+    const receipt = el("a", evidence.label + " ↙");
+    receipt.href = evidence.href;
+    receipt.download = evidence.href;
+    row.append(receipt);
+    article.append(row);
+  }
 });

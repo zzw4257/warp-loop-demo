@@ -49,7 +49,8 @@ Arbitrary loop length and whole-kernel numerical equivalence remain open.
 Open **Running example** for the preserved, recorded player. Select the legal
 case, inspect work matching, and switch to early release. Open **Trace** for
 actual event IDs and their own PTX lines; display order is one execution,
-not additional HB. **Rule** is explicitly an illustration. **Corpus** contains
+not additional HB. **Rule** shows recorded h64 support groups and their actual
+checker counts, including the A002 exemptions; it does not invent HB paths. **Corpus** contains
 the four real profiles. **Efficiency** compares the same obligations: only N1
 has two complete arms and a speedup; later resource limits are incomplete,
 and unrun larger sizes are labeled unrun. **Limits** states what remains open.

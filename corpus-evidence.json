@@ -1,17 +1,43 @@
 {
-  "schema": "wasp.corpus-evidence/v1",
+  "schema": "wasp.corpus-evidence/v2",
+  "evidence_files": {
+    "h64-family-result.json": "build/skeleton-projection-two-round-v1/family-order-v2.json",
+    "h128-family-result.json": "build/varlen-projection-v1/family-order.json",
+    "h64-input.json": "build/conditional-tmem/mixed-two-round-v1/input.json",
+    "h128-input.json": "build/varlen-projection-v1/input.json",
+    "h128-negative-result.json": "build/varlen-projection-v1/negative-wait-trial/replay-retry/results.json",
+    "tk-completion-result.json": "build/corpus-completion-tk-v1/completion-evidence.json",
+    "tk-contract.json": "build/corpus-completion-tk-v1/contract.json",
+    "tk-input.json": "build/corpus-completion-tk-v1/input.json",
+    "tk-baseline-report.json": "build/corpus-completion-tk-v1/baseline.json",
+    "tk-weaken-first-reuse-report.json": "build/corpus-completion-tk-v1/weaken-first-reuse.json",
+    "deepgemm-positive-report.json": "build/corpus-loop-branch-restricted-cluster-v1/report.json",
+    "deepgemm-input.json": "build/corpus-loop-branch-restricted-cluster-v1/input.json",
+    "deepgemm-reset-report.json": "build/corpus-loop-branch-reset-v1/report.json"
+  },
   "cards": [
     {
       "id": "h64",
       "mechanism": "Conditional TMEM rescale",
-      "source": "Attention h64 source projection; four correction warps",
+      "source": "Attention h64 source projection; correction warps",
       "ptx": "corpus/flash_attention__fwd_dense_bf16_h64__sm_100a.ptx:3892",
       "input": "build/conditional-tmem/mixed-two-round-v1/input.json",
-      "positive": "256 admitted choice vectors; 3,403,376 potential conflicts; supported-order family complete",
-      "negative": "tensor feedback / arbitrary repeated visits are outside the admission contract",
+      "positive": "8 independent warp/visit choices \u2192 256 admitted vectors; 3,403,376 potential conflicts; supported-order family complete",
+      "negative_label": "Negative-control coverage",
+      "negative": "No negative control is included in this two-visit family receipt. The separate h128 store-wait control is shown below.",
       "verdict": "conditional_supported_orders",
-      "scope": "two visits, fixed control and resolved footprint; A002 exemption retained",
-      "remaining": "memory-mediated branch/address noninterference and numerical equivalence"
+      "scope": "2 visits per correction warp; fixed control and resolved footprint; 341,248 unordered pairs exempted under A002",
+      "remaining": "memory-mediated branch/address noninterference and numerical equivalence",
+      "evidence_links": [
+        {
+          "label": "h64 family result",
+          "href": "h64-family-result.json"
+        },
+        {
+          "label": "h64 input",
+          "href": "h64-input.json"
+        }
+      ]
     },
     {
       "id": "deepgemm",
@@ -20,22 +46,58 @@
       "ptx": "corpus/deepgemm__deepgemm_sm100_bf16_gemm_m128_n256_k128__sm_100f.ptx",
       "input": "build/corpus-loop-branch-restricted-cluster-v1/input.json",
       "positive": "restricted two-CTA result: race_free; stage 0,1 \u2192 2,3 and continuous cursor",
-      "negative": "cursor reset control: synchronization_candidate; full launch reaches 8 GiB",
+      "negative": "cursor reset control: synchronization_candidate; next-phase arrival occurred before a successful prior-phase wait",
       "verdict": "race_free (restricted)",
       "scope": "restricted two-CTA positive; first 12-stage wrap not tested",
-      "remaining": "full cross-output family and complete launch scale"
+      "remaining": "full cross-output family and complete launch scale",
+      "evidence_links": [
+        {
+          "label": "deepgemm positive report",
+          "href": "deepgemm-positive-report.json"
+        },
+        {
+          "label": "deepgemm reset report",
+          "href": "deepgemm-reset-report.json"
+        },
+        {
+          "label": "deepgemm input",
+          "href": "deepgemm-input.json"
+        }
+      ]
     },
     {
       "id": "tk",
       "mechanism": "Bulk-group source-read completion",
       "source": "ThunderKittens B200 GEMM epilogue",
       "ptx": "corpus/thunderkittens__thunderkittens_bf16_b200_gemm__sm_100a.ptx:5690",
-      "input": "build/corpus-completion-tk-v1/baseline.source.json",
-      "positive": "baseline race_free; four slices / two buffers; 479,826 events",
-      "negative": "one-line wait weakening \u2192 race_candidate; two replay orientations",
-      "verdict": "race_free / discriminating negative",
-      "scope": "source-read retirement before overwrite; native event-model replay",
-      "remaining": "destination completion, authenticated compilation source, WGMMA claims"
+      "input": "build/corpus-completion-tk-v1/input.json",
+      "positive": "baseline race_free; 479,826 events",
+      "negative": "one-line wait weakening \u2192 race_candidate; 2 recorded replay orientations",
+      "verdict": "race_free / race_candidate",
+      "scope": "One task, four epilogue slices, two staging buffers, two CTAs, all 256 threads per CTA; A005 disables later tasks; Certified DAG linearization and Wasp event-model replay; not PTX operational or hardware replay.",
+      "remaining": "destination completion, authenticated compilation source, WGMMA claims",
+      "evidence_links": [
+        {
+          "label": "tk completion result",
+          "href": "tk-completion-result.json"
+        },
+        {
+          "label": "tk contract",
+          "href": "tk-contract.json"
+        },
+        {
+          "label": "tk baseline report",
+          "href": "tk-baseline-report.json"
+        },
+        {
+          "label": "tk weaken first reuse report",
+          "href": "tk-weaken-first-reuse-report.json"
+        },
+        {
+          "label": "tk input",
+          "href": "tk-input.json"
+        }
+      ]
     },
     {
       "id": "h128",
@@ -43,11 +105,25 @@
       "source": "FlashAttention varlen h128 corrected corpus input",
       "ptx": "corpus/flash_attention__fwd_varlen_bf16_h128__sm_100a.ptx:1198, 3878\u20134099",
       "input": "build/varlen-projection-v1/input.json",
-      "positive": "16 independent choices; 2,354,144 potential conflicts; complete supported-order check",
-      "negative": "remove store wait at line 4099 \u2192 unsafe_lifecycle; initial branch 1198 rejected before repairs",
+      "positive": "4 independent warp choices \u2192 16 vectors; 2,354,144 potential conflicts; complete supported-order check",
+      "negative": "remove store wait at line 4099 \u2192 unsafe_lifecycle",
       "verdict": "conditional_supported_orders",
-      "scope": "one visit per warp, 10 TMA / 32 MMA / 512 threads; h128 is a profile of the same mechanism",
-      "remaining": "tensor-input feedback and repeated visits"
+      "scope": "1 visit per warp; fixed control and resolved footprint; h128 is a profile of the same mechanism",
+      "remaining": "tensor-input feedback and repeated visits",
+      "evidence_links": [
+        {
+          "label": "h128 family result",
+          "href": "h128-family-result.json"
+        },
+        {
+          "label": "h128 negative result",
+          "href": "h128-negative-result.json"
+        },
+        {
+          "label": "h128 input",
+          "href": "h128-input.json"
+        }
+      ]
     }
   ],
   "raw": {

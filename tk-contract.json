@@ -1,0 +1,36 @@
+{
+  "question": "Does source-read retirement protect the first shared epilogue buffer reuse?",
+  "origin": "Old PhaseGuard D1 ring/group obligation; a distinct real TK implementation, not the original DeepGEMM case",
+  "scope": "One task, four epilogue slices, two staging buffers, two CTAs, all 256 threads per CTA; A005 disables later tasks",
+  "shape": {
+    "M": 256,
+    "N": 256,
+    "K": 64
+  },
+  "entry": "_Z6kernelI6configILi256ELi256ELi64ELi8ELb1ELi5ELi4EEEv7globalsIT_E",
+  "source": {
+    "path_from_ptx_file4": "ThunderKittens/kernels/gemm/bf16_b200/bf16_b200_gemm.cu",
+    "line_from_ptx_loc": 220,
+    "local_reference_commit": "1c3920d993404dd49a6d4c7267ea11d583bd5c68",
+    "qualification": "PTX .file/.loc binds source path and line; corpus does not pin the compilation source commit. The independently saved source is explanatory, not proof of identical compilation."
+  },
+  "factor": "Only PTX line 5690: cp.async.bulk.wait_group.read 1 -> read 7; line count and all other code unchanged",
+  "limits": {
+    "seconds_per_arm": 120,
+    "rss_mib": 8192
+  },
+  "measurement": "Single diagnostic run per arm; no speedup claim",
+  "ptx": {
+    "path": "/Users/zzw4257/wasp-upstream-review-20260920/corpus/thunderkittens__thunderkittens_bf16_b200_gemm__sm_100a.ptx",
+    "sha256": "2cd3cdc84dd51a8f58bf7b4a7d912107a8992cc11582102c4f4c9978e0210ad9"
+  },
+  "input": {
+    "path": "build/corpus-completion-tk-v1/input.json",
+    "sha256": "f660283dd44a4f73cbadafd9fd8b96efcc6829a174e7079607749ab424170eb1"
+  },
+  "binary": {
+    "path": "/Users/zzw4257/wasp-upstream-review-20260920/build/cmake/spverify-ptx",
+    "sha256": "9f435ac1ddf7065bbd6d9474d90c7c32495ac582905e0a691c5580c2377abcb0"
+  },
+  "mutant_sha256": "b51cb4cc040c5300d57bbac5cafe6b2d9714c7ad739482eeb37e5920cb248f29"
+}
