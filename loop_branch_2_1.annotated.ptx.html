@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two buffers across an output boundary — Annotated PTX</title>
+<style>
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #17252b; background: #fff; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+a { color: #075c91; text-underline-offset: 3px; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #e3ad35; outline-offset: 4px; }
+nav { position: sticky; top: 0; z-index: 1; padding: 16px max(20px, calc((100vw - 1100px) / 2)); background: #fff; border-bottom: 1px solid #dce2e5; }
+nav a { font-weight: 650; }
+main { max-width: 1140px; margin: auto; padding: 30px 20px 60px; }
+h1 { font-size: clamp(24px, 3vw, 34px); line-height: 1.2; margin: 0 0 12px; }
+p { line-height: 1.6; max-width: 76ch; }
+.description { color: #43535c; }
+.source-tools { display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: baseline; margin: 24px 0; }
+details { color: #43535c; font-size: 14px; }
+summary { cursor: pointer; }
+details code { display: block; max-width: 100%; overflow-wrap: anywhere; margin: 10px 0; }
+pre { margin: 0; border: 1px solid #dce2e5; border-radius: 8px; overflow: hidden; }
+#ptx-source { display: block; font: 14px/1.65 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; tab-size: 4; white-space: pre-wrap; overflow-wrap: anywhere; padding: 20px; }
+.reading-note { color: #276b45; white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 600px) { main { padding: 24px 12px; } #ptx-source { padding: 12px; font-size: 13px; } .reading-note { padding: 8px; } }
+</style>
+</head>
+<body>
+<nav><a href="index.html#running">← Back to the example</a></nav>
+<main>
+<h1>Two buffers across an output boundary</h1>
+<p class="description"><strong>Annotated PTX.</strong> Complete source. Comments appear in green; original instructions are preserved.</p>
+<div class="source-tools"><a href="kernel.ptx.html">Read original version</a><a href="loop_branch_2_1.annotated.ptx" download>Download PTX file</a>
+<details><summary>Local file location</summary><code>/Users/zzw4257/wasp-upstream-review-20260920/research/loop-reuse/annotated/loop_branch_2_1.annotated.ptx</code></details></div>
+<pre><code id="ptx-source"><span class="reading-note">// Original source: /Users/zzw4257/wasp-upstream-review-20260920/build/loop-reuse/legal/kernel.ptx</span>
+<span class="reading-note">// Two-output, two-buffer example: (0,0)-&gt;B0, (0,1)-&gt;B1, (1,0)-&gt;B0.</span>
+<span class="reading-note">// The local loop counter restarts; the pipeline cursor and logical work ordinal continue.</span>
+<span class="reading-note">// Ready-barrier generations are counted per buffer: q0 uses B0 generation 0,</span>
+<span class="reading-note">// q1 uses B1 generation 0, and q2 reuses B0 at generation 1.</span>
+<span class="reading-note">// The single matrix-completion barrier is different: its generations are 0, 1, 2.</span>
+<span class="reading-note">// Parity is generation modulo 2, so its three waits use 0, 1, 0.</span>
+<span class="reading-note">// Thread 0 produces and thread 32 consumes after lane filtering. The destination records task</span>
+<span class="reading-note">// completion, not an MMA numerical output.</span>
+<span class="reading-note">// This copy adds explanatory comments only; the original file is retained unchanged.</span>
+.version 9.2
+.target sm_100a
+.address_size 64
+.visible .entry loop_branch(.param .u64 .ptr source, .param .u64 .ptr destination)
+.maxntid 64, 1, 1
+{
+.reg .pred %p&lt;8&gt;;
+.reg .b32 %r&lt;24&gt;;
+.reg .b64 %rd&lt;8&gt;;
+.shared .align 128 .b8 smem[131200];
+<span class="reading-note">// ROLE ASSIGNMENT: read hardware thread and lane identity. Allocation uses the second warp</span>
+<span class="reading-note">// collectively; lane filtering happens after initialization.</span>
+mov.u32 %r0, %tid.x; <span class="reading-note">// r0 = thread index within this CTA; thread 0 will produce and thread 32 will consume.</span>
+mov.u32 %r1, %laneid; <span class="reading-note">// r1 = lane index within the warp. Later only lane 0 of each warp enters the protocol.</span>
+setp.ge.u32 %p5, %r0, 32; <span class="reading-note">// p5 = (thread index &gt;= 32): select the whole second warp for collective TMEM allocation and deallocation.</span>
+mov.u32 %r19, smem; <span class="reading-note">// r19 = shared allocation base address.</span>
+add.u32 %r19, %r19, 131112; <span class="reading-note">// r19 = shared base + 131112: address of the shared cell receiving the allocated TMEM handle.</span>
+@%p5 tcgen05.alloc.cta_group::1.sync.aligned.shared::cta.b32 [%r19], 128; <span class="reading-note">// Collectively allocate TMEM; write the handle to shared memory using the encoded CTA-group scope.</span>
+setp.eq.u32 %p0, %r0, 0; <span class="reading-note">// p0 = (thread index == 0): elect exactly thread 0 to initialize barriers.</span>
+<span class="reading-note">// BOOTSTRAP: 131072/131080 are B0/B1 ready barriers; 131088/131096 are empty barriers; 131104 notifies</span>
+<span class="reading-note">// matrix completion.</span>
+@%p0 mbarrier.init.shared::cta.b64 [131072], 1; <span class="reading-note">// Initialize barrier arrival count. Initialization, phase reuse and transaction completion are separate obligations.</span>
+@%p0 mbarrier.init.shared::cta.b64 [131080], 1; <span class="reading-note">// Initialize B1&#x27;s ready barrier with one expected arrival.</span>
+@%p0 mbarrier.init.shared::cta.b64 [131088], 1; <span class="reading-note">// Initialize B0&#x27;s empty barrier; consumer arrivals later return reuse credit.</span>
+@%p0 mbarrier.init.shared::cta.b64 [131096], 1; <span class="reading-note">// Initialize B1&#x27;s empty barrier independently of B0.</span>
+@%p0 mbarrier.init.shared::cta.b64 [131104], 1; <span class="reading-note">// Initialize the shared matrix-completion barrier, reused once per work item.</span>
+@%p0 fence.mbarrier_init.release.cluster; <span class="reading-note">// Apply the ordering and visibility scope encoded here. A fence is not a wait for every pending async operation.</span>
+bar.sync 0; <span class="reading-note">// Join the specified thread participants. Asynchronous effects require their own completion evidence.</span>
+ld.shared.b32 %r18, [%r19]; <span class="reading-note">// r18 = the TMEM handle written to the shared allocation cell.</span>
+setp.ne.u32 %p1, %r1, 0; <span class="reading-note">// p1 = (lane != 0): identify lanes that skip producer/consumer work and proceed to the final CTA join.</span>
+@%p1 bra END; <span class="reading-note">// Transfer to the named label only when the leading predicate holds; ! negates it. Otherwise fall through.</span>
+setp.eq.u32 %p0, %r0, 0; <span class="reading-note">// p0 = (thread index == 0): distinguish producer lane 0 from consumer thread 32.</span>
+<span class="reading-note">// IDENTITIES: r2=output, r4=local iteration, r5=pipeline cursor, r17=work ordinal. The latter two are</span>
+<span class="reading-note">// initialized once, not at OUTPUT.</span>
+mov.u32 %r2, 0; <span class="reading-note">// r2 = 0: start at output 0.</span>
+mov.u32 %r5, 0; <span class="reading-note">// r5 = 0: initialize the continuous physical pipeline cursor once.</span>
+mov.u32 %r17, 0; <span class="reading-note">// r17 = 0: initialize the continuous logical work ordinal once.</span>
+mov.u32 %r16, 0; <span class="reading-note">// r16 = 0: initialize the register value supplied in the MMA operand tuple.</span>
+ld.param.u64 %rd4, [source]; <span class="reading-note">// rd4 = source pointer passed by the caller.</span>
+ld.param.u64 %rd5, [destination]; <span class="reading-note">// rd5 = destination completion-record pointer passed by the caller.</span>
+<span class="reading-note">// WORK ALLOCATION: output 0 has two items, output 1 has one. Reset only r4, so the work sequence</span>
+<span class="reading-note">// remains q=0,1,2.</span>
+OUTPUT:
+setp.eq.u32 %p3, %r2, 0; <span class="reading-note">// p3 = (output == 0).</span>
+@%p3 mov.u32 %r3, 2; <span class="reading-note">// For output 0, set r3 = 2 local iterations.</span>
+setp.eq.u32 %p3, %r2, 1; <span class="reading-note">// p3 = (output == 1).</span>
+@%p3 mov.u32 %r3, 1; <span class="reading-note">// For output 1, set r3 = 1 local iteration.</span>
+
+mov.u32 %r4, 0; <span class="reading-note">// r4 = 0: restart only the local iteration index for this output.</span>
+WORK:
+<span class="reading-note">// SLOT AND PHASE: r6=q mod 2; r7=floor(q/2) mod 2; r8=shared byte offset; r9=ready barrier; r10=empty</span>
+<span class="reading-note">// barrier.</span>
+and.b32 %r6, %r5, 1; <span class="reading-note">// r6 = r5 &amp; 1: select physical buffer B0 or B1 from the pipeline cursor.</span>
+shr.u32 %r7, %r5, 1; <span class="reading-note">// r7 = r5 &gt;&gt; 1: count completed pairs of physical slots.</span>
+and.b32 %r7, %r7, 1; <span class="reading-note">// r7 = r7 &amp; 1: reduce that count to ready-barrier parity.</span>
+mul.lo.u32 %r8, %r6, 32768; <span class="reading-note">// r8 = r6 * 32768: shared-memory byte offset of the selected 32-KiB buffer.</span>
+mul.lo.u32 %r9, %r6, 8; <span class="reading-note">// r9 = r6 * 8: select one of the two 8-byte barrier cells.</span>
+add.u32 %r10, %r9, 131088; <span class="reading-note">// r10 = 131088 + r9: selected empty-barrier address.</span>
+add.u32 %r9, %r9, 131072; <span class="reading-note">// r9 = 131072 + r9: selected ready-barrier address.</span>
+@!%p0 bra CONSUMER;
+<span class="reading-note">// Producer: first-use empty credit is parity 1; later uses alternate.</span>
+<span class="reading-note">// PRODUCER: wait for the empty credit before overwriting the slot. Initial credit uses parity 1; later</span>
+<span class="reading-note">// uses alternate. Source address follows r17, not local iteration.</span>
+xor.b32 %r11, %r7, 1; <span class="reading-note">// r11 = r7 XOR 1: empty-credit parity is complementary to this use&#x27;s ready parity.</span>
+EMPTY:
+mbarrier.try_wait.parity.shared::cta.b64 %p2, [%r10], %r11; <span class="reading-note">// Probe the specified barrier phase and set the success predicate. The following branch retries or exits; failure is not completion.</span>
+@!%p2 bra EMPTY;
+mul.wide.u32 %rd0, %r17, 32768; <span class="reading-note">// rd0 = r17 * 32768: byte offset of the logical source work item, independent of local iteration.</span>
+add.u64 %rd0, %rd0, %rd4; <span class="reading-note">// rd0 = source base rd4 + logical work byte offset.</span>
+mbarrier.arrive.expect_tx.shared::cta.b64 _, [%r9], 32768; <span class="reading-note">// Arrive and register expected transaction bytes. Both arrival count and transaction count constrain phase completion.</span>
+cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes [%r8], [%rd0], 32768, [%r9]; <span class="reading-note">// Issue an asynchronous copy. Completed bytes contribute to the transaction barrier; issue is not readiness.</span>
+setp.lt.u32 %p6, %r17, 2; <span class="reading-note">// p6 = (r17 &lt; 2): another item exists after q0/q1, but not after q2.</span>
+@!%p6 bra END;
+bra NEXT; <span class="reading-note">// Transfer to the named label. This is control flow, not async completion.</span>
+CONSUMER:
+<span class="reading-note">// Logical task identity is retained separately from the physical buffer.</span>
+<span class="reading-note">// CONSUMER: retain logical task ID r14 separately from physical buffer. Ready-barrier completion alone</span>
+<span class="reading-note">// cannot validate an incorrectly assigned work ID.</span>
+mov.u32 %r14, %r17; <span class="reading-note">// r14 = r17: save the consumer&#x27;s logical task identity for its completion-record address.</span>
+FULL:
+mbarrier.try_wait.parity.shared::cta.b64 %p2, [%r9], %r7; <span class="reading-note">// Probe readiness of this buffer generation before issuing matrix work.</span>
+@!%p2 bra FULL;
+tcgen05.fence::after_thread_sync;
+<span class="reading-note">// Descriptor-decoded operand ranges fit in a 32KiB stage.</span>
+<span class="reading-note">// Descriptor address fields are in 16-byte units.</span>
+<span class="reading-note">// MATRIX WORK: shared descriptor address fields are in 16-byte units. Issue is asynchronous; operand</span>
+<span class="reading-note">// readers can survive beyond issue.</span>
+shr.u32 %r12, %r8, 4; <span class="reading-note">// r12 = r8 &gt;&gt; 4: convert selected shared byte offset into the descriptor&#x27;s 16-byte address units.</span>
+cvt.u64.u32 %rd3, %r12; <span class="reading-note">// rd3 = zero-extended r12: widen the shared descriptor-address field to 64 bits.</span>
+add.u64 %rd1, %rd3, 0x4000404000010000; <span class="reading-note">// rd1 = rd3 + 0x4000404000010000: construct the first MMA operand descriptor at this stage.</span>
+add.u64 %rd2, %rd3, 0x4000404000010100; <span class="reading-note">// rd2 = rd3 + 0x4000404000010100: construct the second operand descriptor at its encoded intra-stage offset.</span>
+mov.u32 %r13, 136314896; <span class="reading-note">// r13 = 136314896: constant encoded MMA instruction descriptor for this constructed instance.</span>
+setp.ne.u32 %p4, %r1, %r1; <span class="reading-note">// p4 = (lane != lane), always false: supply the false accumulation-control predicate for this MMA issue.</span>
+tcgen05.mma.cta_group::1.kind::f16 [%r18], %rd1, %rd2, %r13, {%r16, %r16, %r16, %r16}, %p4; <span class="reading-note">// Issue asynchronous matrix work using the descriptors. Issue does not establish that operand reads have finished.</span>
+tcgen05.commit.cta_group::1.mbarrier::arrive::one.shared::cluster.b64 [131104]; <span class="reading-note">// Attach completion of covered matrix operations to the addressed mbarrier. A subsequent successful wait supplies the completion boundary.</span>
+
+and.b32 %r15, %r17, 1; <span class="reading-note">// r15 = r17 &amp; 1: alternate matrix-completion barrier parity once per logical work item.</span>
+<span class="reading-note">// COMPLETION BEFORE RELEASE: commit notifies barrier 131104; wait using r17 parity before arriving on</span>
+<span class="reading-note">// the slot empty barrier. Releasing earlier invalidates reuse.</span>
+DONE_WAIT:
+mbarrier.try_wait.parity.shared::cta.b64 %p2, [131104], %r15; <span class="reading-note">// Probe completion of the committed matrix work before returning this buffer&#x27;s empty credit.</span>
+@!%p2 bra DONE_WAIT;
+mbarrier.arrive.shared::cta.b64 _, [%r10]; <span class="reading-note">// Contribute an arrival to this barrier. This is not a universal fence for unrelated asynchronous operations.</span>
+<span class="reading-note">// Observable task-completion record; this is not an MMA numerical output.</span>
+mul.wide.u32 %rd6, %r14, 4; <span class="reading-note">// rd6 = r14 * 4: address completion records by the saved consumer task identity.</span>
+add.u64 %rd6, %rd6, %rd5; <span class="reading-note">// rd6 = destination base rd5 + completion-record byte offset.</span>
+st.global.u32 [%rd6], %r17; <span class="reading-note">// destination[r14] = r17: record which work ordinal was consumed at that task address; this is not a numerical MMA output.</span>
+NEXT:
+<span class="reading-note">// CONTINUOUS ADVANCE: increment pipeline cursor r5, work ordinal r17 and local iteration r4</span>
+<span class="reading-note">// separately. The reset negative control resets only r5 at OUTPUT, not r17.</span>
+add.u32 %r5, %r5, 1; <span class="reading-note">// r5 = r5 + 1: advance physical pipeline cursor, retaining its history across output boundaries.</span>
+add.u32 %r17, %r17, 1; <span class="reading-note">// r17 = r17 + 1: advance logical work ordinal independently of physical cursor.</span>
+add.u32 %r4, %r4, 1; <span class="reading-note">// r4 = r4 + 1: advance the current output&#x27;s local iteration.</span>
+setp.lt.u32 %p3, %r4, %r3; <span class="reading-note">// p3 = (r4 &lt; r3): test whether this output still has another work item.</span>
+@%p3 bra WORK;
+<span class="reading-note">// BOUNDARY: increment r5 and r17 continuously, advance r4 locally, then move to the next output. A new</span>
+<span class="reading-note">// output must not reset the pipeline.</span>
+add.u32 %r2, %r2, 1; <span class="reading-note">// r2 = r2 + 1: move to the next output after its local loop finishes.</span>
+setp.lt.u32 %p3, %r2, 2; <span class="reading-note">// p3 = (r2 &lt; 2): test whether either of the two outputs remains.</span>
+@%p3 bra OUTPUT;
+<span class="reading-note">// Tail retains completion/release; no further producer copy is issued.</span>
+END:
+<span class="reading-note">// TAIL JOIN: producer exits after issuing q2; consumer still waits for q2 matrix completion and</span>
+<span class="reading-note">// releases B0. Both join here before deallocation. The early-release negative control moves the</span>
+<span class="reading-note">// arrival originally at line 85 to immediately after commit at line 79. It retains the later</span>
+<span class="reading-note">// completion wait; the flaw is release before that wait.</span>
+bar.sync 1;
+@%p5 tcgen05.dealloc.cta_group::1.sync.aligned.b32 %r18, 128; <span class="reading-note">// Collectively release TMEM. Outstanding accesses must finish before this lifecycle endpoint.</span>
+ret; <span class="reading-note">// Return only after the final CTA join and selected-warp TMEM deallocation.</span>
+}
+</code></pre>
+</main>
+</body>
+</html>

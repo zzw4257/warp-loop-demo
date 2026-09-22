@@ -46,12 +46,18 @@ Arbitrary loop length and whole-kernel numerical equivalence remain open.
 
 ## Operate the page
 
-Open **Running example** for the preserved, recorded player. Select the legal
-case, inspect work matching, and switch to early release. Open **Trace** for
-actual event IDs and their own PTX lines; display order is one execution,
-not additional HB. **Rule** shows recorded h64 support groups and their actual
-checker counts, including the A002 exemptions; it does not invent HB paths. **Corpus** contains
-the four real profiles. **Efficiency** compares the same obligations: only N1
+Open **1. Buffer reuse**. Select **Legal reuse**, then **Jump to B0 reuse**:
+q0 has no remaining read effects when q2 overwrites B0. Select **Early release**,
+choose **Recorded race witness**, and jump again: q0 still has a pending read.
+**Next event** and **Previous** follow recorded milestones; the code panel shows
+the selected event's original PTX. Display order is one execution, not added HB.
+**Wrong output** and **Wrong input** separate task correspondence from race
+freedom. **Reset cursor** shows its stored result without inventing an execution.
+**Original PTX** and **Annotated PTX** open complete readable files; downloading
+is a separate action. The original player remains available as a standalone link.
+**2. Our method** shows recorded h64 support groups and their actual checker
+counts, including the A002 exemptions; it does not invent HB paths.
+**3. Real kernels** contains the four real profiles. **4. Cost** compares the same obligations: only N1
 has two complete arms and a speedup; later resource limits are incomplete,
 and unrun larger sizes are labeled unrun. **Limits** states what remains open.
 
